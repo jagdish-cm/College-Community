@@ -1,0 +1,55 @@
+<div class="container">
+  <div *ngFor="let item of list">
+    <!-- one post -->
+    <div class="row post mt-3 ">
+      <div class="col pt-3 pb-1">
+        <!-- post head -->
+        <div class="row px-4">
+          <div class="col-2">
+            <img src="{{ profileImg }}" height="50" width="50" alt="" />
+          </div>
+          <div class="col-9 ">
+            <div class="row font-weight-bolder username">
+              <div class="col px-0">{{ username }}</div>
+            </div>
+            <div class="row userpost">
+              <div class="col px-0">{{ post }}</div>
+            </div>
+            <div class="row timepost">
+              <div class="col px-0">1 week ago</div>
+            </div>
+          </div>
+          <div class="col-1">
+            <span
+              ><fa-icon
+                [icon]="faEllipsisH"
+                class="d-flex justify-content-end tdot"
+              ></fa-icon
+            ></span>
+          </div>
+        </div>
+        <!-- post data -->
+        <div class="row pt-3">
+          <div class="col postdata  mx-4">{{ postdata }}</div>
+        </div>
+        <hr />
+        <!-- post likes -->
+        <div class="row mb-0">
+          <div class="col mx-4 likes">
+            <div class="row">
+              <div class="col-4 lcounts">
+                <span><fa-icon [icon]="faHeart"></fa-icon></span>
+                <span class="pl-2 mb-2">{{ lcounts }}</span>
+              </div>
+              <div class="col-4" class="mx-auto">{{ comcounts }} Comments</div>
+              <div class="col-4 d-flex justify-content-end ">
+                <span><fa-icon [icon]="faCommentAlt"></fa-icon></span>
+                <span class="pl-2 mb-2">Add comment</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
