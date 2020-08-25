@@ -5,7 +5,8 @@
 
 $grayed-border: #00000031;
 $blued: RGB(0, 157, 236);
-$gfont: rgba(94, 94, 94, 0.822);
+$gfont: rgb(63, 63, 63);
+$gbg: rgb(238, 238, 238);
 
 @mixin input {
   padding: 1em;
@@ -17,7 +18,7 @@ $gfont: rgba(94, 94, 94, 0.822);
   border-radius: 3px;
   -webkit-box-shadow: 0px 0px 5px 1px rgba(130, 130, 130, 0.6);
   -moz-box-shadow: 0px 0px 5px 1px rgba(130, 130, 130, 0.6);
-  box-shadow: 0px 0px 3px 1px rgba(130, 130, 130, 0.6);
+  box-shadow: 0px 0px 3px 1px rgba(216, 216, 216, 0.6);
 }
 
 html,

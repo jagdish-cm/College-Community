@@ -1,0 +1,101 @@
+<div class="container-fluid my-5">
+  <div class="row align-items-center">
+    <!-- search and sort -->
+    <div class="col-sm-12 col-md-2 pt-4  ">
+      <div class="form-group div-inline has-search px-1 w-sm-50">
+        <span class="fa fa-search form-control-feedback"></span>
+        <input type="text" class="form-control" placeholder="Search notes..." />
+      </div>
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Sort by
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filter by Branch
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filter by sem
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- notes -->
+    <div class="col-sm-12 col-md-10 border-left">
+      <div class="row">
+        <div class="col display-4 pt-4 d-flex justify-content-center">
+          Notes
+        </div>
+      </div>
+      <div class="row pt-4 pl-3">
+        <div *ngFor="let item of list">
+          <div class="col pb-3 px-0 mx-2 cd">
+            <a href="#"
+              ><div class="card " style="width: 9rem;">
+                <img
+                  src="https://programmerspoint.in/images/data-structure-course.jpg"
+                  class="card-img-top"
+                  alt="https://programmerspoint.in/images/data-structure-course.jpg"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{ title }}</h5>
+                  <div class="card-text pb-3">
+                    <div>{{ subject }}</div>
+                    <hr class="my-1" />
+                    <div class="by">
+                      {{ upby }} &bull;
+                      <span class="ml-auto date">{{
+                        update | date: "d MMM"
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

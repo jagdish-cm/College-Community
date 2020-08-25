@@ -1,16 +1,33 @@
-<div class="container">
+<div class="container mt-sm-4 mt-lg-0">
   <!-- announcement section -->
-  <div class="row">
+  <div class="row py-3 ancs">
     <div class="col">
       <!-- announce head -->
-      <div class="row">
-        <div class="col d-flex justify-content-center w-100 ahead">
+      <div class="row ">
+        <div class="col ahead d-flex justify-content-start w-100 ">
+          <span><fa-icon [icon]="faVolumeUp" class="pr-2"></fa-icon></span>
           Announcements
         </div>
       </div>
+      <hr class="mt-2 mb-0" />
       <!-- announcements -->
-      <div class="row">
-        <div class="col"></div>
+      <div class="row pb-0">
+        <div class="col px-0">
+          <!-- one announcemet -->
+          <div *ngFor="let item of list">
+            <div class="row mx-0 pt-3">
+              <div class="col-1 bt pt-1">
+                <span><fa-icon [icon]="faCircle"></fa-icon></span>
+              </div>
+              <div class="col-8 px-2 ml-1  acontent">
+                {{ acontent }}
+              </div>
+              <div class="col-2 adate px-0 mx-0 d-flex justify-content-end">
+                {{ adate | date: "d MMM" }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

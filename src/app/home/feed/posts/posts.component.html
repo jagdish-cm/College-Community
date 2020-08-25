@@ -1,14 +1,14 @@
-<div class="container">
+<div class="container-fluid mt-4">
   <div *ngFor="let item of list">
     <!-- one post -->
-    <div class="row post mt-3 ">
+    <div class="row post mt-2 ">
       <div class="col pt-3 pb-1">
         <!-- post head -->
-        <div class="row px-4">
-          <div class="col-2">
-            <img src="{{ profileImg }}" height="50" width="50" alt="" />
+        <div class="row ">
+          <div class=" col-sm-4 col-md-2 col-lg-1 mx-4 ">
+            <img src="{{ profileImg }}" class="ppic" alt="" />
           </div>
-          <div class="col-9 ">
+          <div class=" col-sm-4 col-md-9 col-lg-9 ">
             <div class="row font-weight-bolder username">
               <div class="col px-0">{{ username }}</div>
             </div>
@@ -19,7 +19,7 @@
               <div class="col px-0">1 week ago</div>
             </div>
           </div>
-          <div class="col-1">
+          <div class=" col-sm-4 col-md-1 col-lg-1 ">
             <span
               ><fa-icon
                 [icon]="faEllipsisH"
