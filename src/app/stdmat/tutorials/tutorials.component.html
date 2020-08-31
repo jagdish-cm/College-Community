@@ -1,1 +1,132 @@
-<p>tutorials works!</p>
+<div class="container-fluid my-5">
+  <div class="row align-items-center">
+    <!-- search and sort -->
+    <div class="col-sm-12 col-md-2 pt-4  ">
+      <div class="form-group div-inline has-search px-1 w-sm-50">
+        <span class="fa fa-search form-control-feedback"></span>
+        <input type="text" class="form-control" placeholder="Search notes..." />
+      </div>
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Sort by
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filter by Branch
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+
+      <div class="dropdown div-inline px-1 my-1">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Filter by sem
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- notes -->
+    <div class="col-sm-12 col-md-10 border-left">
+      <div class="row">
+        <div class="col display-4 pt-4 pl-4">
+          <span>Tutorials</span>
+        </div>
+      </div>
+      <div class="row pt-4 pl-3">
+        <div *ngFor="let item of list">
+          <div class="col pb-3 px-0 mx-2 cd">
+            <a href="#" class="cardlink"
+              ><div class="card " style="width: 9rem;">
+                <div class="m_load_here">
+                  <img
+                    src="{{ ytthumb }}"
+                    class="card-img-top"
+                    alt="YouTube Video"
+                  />
+                  <a
+                    class="m_overlay"
+                    href="https://www.mbasic.facebook.com"
+                    data-src="{{ ytlink }}"
+                  ></a>
+                  <span class="m_yt_button"
+                    ><svg
+                      height="100%"
+                      version="1.1"
+                      viewBox="0 0 68 48"
+                      width="100%"
+                    >
+                      <path
+                        class="ytp-large-play-button-bg"
+                        d="m .66,37.62 c 0,0 .66,4.70 2.70,6.77 2.58,2.71 5.98,2.63 7.49,2.91 5.43,.52 23.10,.68 23.12,.68 .00,-1.3e-5 14.29,-0.02 23.81,-0.71 1.32,-0.15 4.22,-0.17 6.81,-2.89 2.03,-2.07 2.70,-6.77 2.70,-6.77 0,0 .67,-5.52 .67,-11.04 l 0,-5.17 c 0,-5.52 -0.67,-11.04 -0.67,-11.04 0,0 -0.66,-4.70 -2.70,-6.77 C 62.03,.86 59.13,.84 57.80,.69 48.28,0 34.00,0 34.00,0 33.97,0 19.69,0 10.18,.69 8.85,.84 5.95,.86 3.36,3.58 1.32,5.65 .66,10.35 .66,10.35 c 0,0 -0.55,4.50 -0.66,9.45 l 0,8.36 c .10,4.94 .66,9.45 .66,9.45 z"
+                        fill="#1f1f1e"
+                        fill-opacity="0.81"
+                      />
+                      <path
+                        d="m 26.96,13.67 18.37,9.62 -18.37,9.55 -0.00,-19.17 z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M 45.02,23.46 45.32,23.28 26.96,13.67 43.32,24.34 45.02,23.46 z"
+                        fill="#ccc"
+                      /></svg
+                  ></span>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">{{ title }}</h5>
+                  <div class="card-text pb-3">
+                    <div>{{ subject }}</div>
+                    <hr class="my-1" />
+                    <div class="by">
+                      {{ upby }} &bull;
+                      <span class="ml-auto date">{{
+                        update | date: "d MMM"
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

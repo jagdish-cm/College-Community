@@ -18,10 +18,16 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto mt-2 ml-auto my-auto">
-        <li class="nav-item active mr-5 ">
+        <li class="nav-item  mr-5 ">
           <span
-            ><a class="nav-link" href="#"
-              ><span><fa-icon [icon]="faHome"></fa-icon></span> Home</a
+            ><a
+              class="nav-link"
+              [routerLink]="['/']"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              ><span class="fa fa-home"></span>
+
+              Home</a
             ></span
           >
         </li>
@@ -29,35 +35,62 @@
         <li class="nav-item dropdown mr-5  ">
           <a
             class="nav-link dropdown-toggle"
-            href="#"
+            [routerLink]="['/stdmat']"
+            routerLinkActive="active"
             id="navbarDropdown"
             role="button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <span><fa-icon [icon]="faBook"></fa-icon></span> Study Material
+            <span class="fa fa-book"></span> Study Material
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Books</a>
-            <a class="dropdown-item" href="#">Notes</a>
-            <a class="dropdown-item" href="#">Tutorials</a>
-            <a class="dropdown-item" href="#">Previous Year Papers</a>
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/books']"
+              routerLinkActive="active"
+              >Books</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/notes']"
+              routerLinkActive="active"
+              >Notes</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/tutorials']"
+              routerLinkActive="active"
+              >Tutorials</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/papers']"
+              routerLinkActive="active"
+              >Previous Year Papers</a
+            >
           </div>
         </li>
-        <li class="nav-item   mr-5 ">
+        <!-- <li class="nav-item   mr-5 ">
           <a class="nav-link" href="#"
             ><span><fa-icon [icon]="faBell"></fa-icon></span> Notifications</a
           >
-        </li>
+        </li> -->
         <li class="nav-item mr-5  ">
-          <a class="nav-link" href="#"
-            ><span><fa-icon [icon]="faTasks"></fa-icon></span> Assignments</a
+          <a
+            class="nav-link"
+            [routerLink]="['/assigns']"
+            routerLinkActive="active"
+            ><span class="fa fa-tasks"></span> Assignments</a
           >
         </li>
         <li class="nav-item mr-5 ">
-          <a class="nav-link" href="#"
-            ><span><fa-icon [icon]="faUser"></fa-icon></span> Log In</a
+          <a
+            class="nav-link"
+            [routerLink]="['/login']"
+            routerLinkActive="active"
+            ><span class="fa fa-user"></span> Log In</a
           >
         </li>
       </ul>

@@ -52,3 +52,12 @@ img {
 input:focus {
   outline: none;
 }
+
+i[nz-icon] {
+  font-size: 32px;
+  color: #999;
+}
+.ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}

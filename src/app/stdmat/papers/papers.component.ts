@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-papers',
@@ -15,5 +14,4 @@ export class PapersComponent implements OnInit {
   update = Date.now();
   upby: string = 'Binod';
   subject: string = 'Data structures & Algos';
-  faSearch = faSearch;
 }

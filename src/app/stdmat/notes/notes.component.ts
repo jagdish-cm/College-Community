@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-notes',
@@ -16,5 +15,4 @@ export class NotesComponent implements OnInit {
   update = Date.now();
   upby: string = 'Binod';
   subject: string = 'Data structures & Algos';
-  faSearch = faSearch;
 }

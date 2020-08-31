@@ -1,11 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  faHome,
-  faBook,
-  faBell,
-  faTasks,
-  faUser
-} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
@@ -14,12 +7,9 @@ import {
 })
 export class HeaderComponent implements OnInit {
   constructor() {}
-
+  isCollapsed = false;
   ngOnInit(): void {}
-
-  faHome = faHome;
-  faBook = faBook;
-  faBell = faBell;
-  faTasks = faTasks;
-  faUser = faUser;
+  toggleCollapsed(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }

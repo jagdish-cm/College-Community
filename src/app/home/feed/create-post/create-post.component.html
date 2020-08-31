@@ -2,12 +2,7 @@
 <div class="conatiner post mb-4 cp pb-1 w-100">
   <div class="row py-1" data-toggle="modal" data-target="#exampleModal">
     <div class="col-2">
-      <span
-        ><fa-icon
-          [icon]="faEdit"
-          class="d-flex pt-3 justify-content-end"
-        ></fa-icon
-      ></span>
+      <span class="fa fa-edit d-flex pt-3 justify-content-end"></span>
     </div>
     <div class="col-10 ">
       <input type="text" class="py-3" placeholder="Show your skills here..." />
@@ -60,7 +55,7 @@
           data-dismiss="modal"
           aria-label="Close"
         >
-          <fa-icon [icon]="faImages" class="imgi"></fa-icon> Add images
+          <span class="fa fa-images imgi"> </span>Add images
         </button>
         <button type="button" class="btn btn-primary">Post</button>
       </div>
@@ -91,15 +86,47 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="file-upload-wrapper">
-          <input type="file" id="input-file-now" class="file-upload" />
-        </div>
+        <nz-upload
+          nzType="drag"
+          [nzMultiple]="true"
+          nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          (nzChange)="handleChange($event)"
+        >
+          <p class="ant-upload-drag-icon">
+            <i nz-icon nzType="inbox"></i>
+          </p>
+          <p class="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p class="ant-upload-hint">
+            Upload images only
+          </p>
+        </nz-upload>
+        <nz-modal
+          [nzVisible]="previewVisible"
+          [nzContent]="modalContent"
+          [nzFooter]="null"
+          (nzOnCancel)="previewVisible = false"
+        >
+          <ng-template #modalContent>
+            <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+          </ng-template>
+        </nz-modal>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           Close
         </button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Save changes
+        </button>
       </div>
     </div>
   </div>
