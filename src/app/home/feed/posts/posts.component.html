@@ -1,22 +1,22 @@
 <div class="container-fluid mt-4">
-  <div *ngFor="let item of list">
+  <div *ngFor="let post of posts">
     <!-- one post -->
     <div class="row post mt-2 ">
       <div class="col pt-3 pb-1">
         <!-- post head -->
         <div class="row ">
           <div class=" col-sm-4 col-md-2 col-lg-1 mx-4 ">
-            <img src="{{ profileImg }}" class="ppic" alt="" />
+            <img src="{{ post.profileimg }}" class="ppic" alt="" />
           </div>
           <div class=" col-sm-4 col-md-9 col-lg-9 ">
             <div class="row font-weight-bolder username">
-              <div class="col px-0">{{ username }}</div>
+              <div class="col px-0">{{ post.username }}</div>
             </div>
             <div class="row userpost">
-              <div class="col px-0">{{ post }}</div>
+              <div class="col px-0">{{ post.designation }}</div>
             </div>
             <div class="row timepost">
-              <div class="col px-0">1 week ago</div>
+              <div class="col px-0">{{ post.time }}</div>
             </div>
           </div>
           <div class=" col-sm-4 col-md-1 col-lg-1 ">
@@ -27,7 +27,7 @@
         </div>
         <!-- post data -->
         <div class="row pt-3">
-          <div class="col postdata  mx-4">{{ postdata }}</div>
+          <div class="col postdata  mx-4">{{ post.postContent }}</div>
         </div>
         <hr />
         <!-- post likes -->
@@ -37,9 +37,11 @@
               <div class="col-4 lcounts">
                 <i nz-icon nzType="fire" nzTheme="outline" class="pt-0"></i>
                 <!-- <span class="far fa-heart"></span> -->
-                <span class="pl-2 ">{{ lcounts }}</span>
+                <span class="pl-2 ">{{ post.lcounts }}</span>
               </div>
-              <div class="col-4" class="mx-auto">{{ comcounts }} Comments</div>
+              <div class="col-4" class="mx-auto">
+                {{ post.comcounts }} Comments
+              </div>
               <div class="col-4 d-flex justify-content-end ">
                 <span class="fa fa-comment-alt"></span>
                 <span class="pl-2 mb-2" (click)="addnewComment()">
