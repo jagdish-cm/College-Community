@@ -95,6 +95,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzResizableModule } from 'ng-zorro-antd/resizable';
 import { RegisterComponent } from './login/register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { OnepostComponent } from './home/feed/posts/onepost/onepost.component';
 
 registerLocaleData(en);
 
@@ -144,7 +145,8 @@ const routes: Routes = [
     AssignsComponent,
     LoginComponent,
     RegisterComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    OnepostComponent
   ],
   imports: [
     BrowserModule,

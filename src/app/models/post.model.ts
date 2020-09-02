@@ -1,8 +1,11 @@
 export interface Post {
-  postedby: string;
+  id: string;
+  username: string;
   designation: string;
   time: string;
-  likes: number;
-  content: string;
-  comments: Comment[];
+  lcounts: number;
+  postContent: string;
+  // comments: Comment[];
+  comcounts: number;
+  profileimg: string;
 }

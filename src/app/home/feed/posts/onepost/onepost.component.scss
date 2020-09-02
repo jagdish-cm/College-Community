@@ -1,0 +1,39 @@
+@import "../../../../../styles.scss";
+img {
+  border-radius: 50%;
+}
+
+.userpost,
+.timepost {
+  font-size: x-small;
+}
+
+.username,
+.postdata,
+.likes {
+  font-size: small;
+}
+
+.post {
+  @include border;
+}
+
+hr {
+  margin-top: 9px;
+  margin-bottom: 9px;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.lcounts {
+  color: rgb(214, 0, 0);
+}
+
+.tdot {
+  color: $gfont;
+}
+
+.ppic {
+  height: 3.2rem;
+  width: 3.2rem;
+}
