@@ -15,9 +15,15 @@
                   <nz-form-item>
                     <nz-form-label [nzSpan]="7" nzRequired>Batch</nz-form-label>
                     <nz-form-control [nzSpan]="12" [nzXs]="24">
-                      <nz-range-picker
-                        formControlName="batch"
-                      ></nz-range-picker>
+                      <nz-year-picker
+                        formControlName="batchFrom"
+                        nzPlaceHolder="From"
+                      ></nz-year-picker>
+                      <nz-year-picker
+                        class="ml-2"
+                        formControlName="batchTo"
+                        nzPlaceHolder="To"
+                      ></nz-year-picker>
                     </nz-form-control>
                   </nz-form-item>
 

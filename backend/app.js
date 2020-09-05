@@ -1,12 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const Post = require("./models/post");
 const mongoose = require("mongoose");
+
+const postRouter = require("./routes/posts");
+const userRouter = require("./routes/user");
 
 mongoose
   .connect(
     "mongodb+srv://jcm:ramram@cluster0.j9nm3.mongodb.net/CTAE?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
   )
   .then(() => {
     console.log("Connected to DB");
@@ -40,38 +42,7 @@ app.use((req, res, next) => {
 
 //User defined paths goes here
 
-app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    username: req.body.username,
-    designation: req.body.designation,
-    time: req.body.time,
-    lcounts: req.body.lcounts,
-    postContent: req.body.postContent,
-    //   comments: Comment[],
-    comcounts: req.body.comcounts,
-    profileimg: req.body.profileimg
-  });
-  post.save().then(createdPost => {
-    console.log(createdPost);
-    res.status(201).json({ postid: createdPost._id });
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-  Post.find().then(documents => {
-    res.json({
-      message: "posts fetched !",
-      posts: documents
-    });
-  });
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  console.log("id of post " + req.params.id);
-  Post.deleteOne({ _id: req.params.id }).then(() => {
-    console.log("deleted in backend");
-    res.status(201).end();
-  });
-});
+app.use("/api/posts", postRouter);
+app.use("/api/user", userRouter);
 
 module.exports = app;

@@ -14,6 +14,27 @@ img {
   font-size: small;
 }
 
+.up {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-right: 8px;
+  padding-left: 8px;
+  border: 1px $blued solid;
+  color: $blued;
+  border-radius: 4px;
+  background-color: white;
+  &:hover {
+    background-color: rgba(128, 128, 128, 0.082);
+  }
+  &:focus {
+    outline: none;
+    background-color: rgba(128, 128, 128, 0.295);
+  }
+}
+
+.imgi {
+  color: $blued;
+}
 .post {
   @include border;
 }

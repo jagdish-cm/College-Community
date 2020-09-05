@@ -115,7 +115,7 @@ const routes: Routes = [
   },
 
   { path: 'assigns', component: AssignsComponent },
-
+  { path: 'edit/:postId', component: CreatePostComponent },
   {
     path: 'login',
     children: [

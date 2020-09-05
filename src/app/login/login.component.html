@@ -26,18 +26,18 @@
     <div class="col-12 pt-3">
       <form
         nz-form
-        [formGroup]="validateForm"
+        [formGroup]="loginForm"
         class="login-form mx-auto"
         (ngSubmit)="submitForm()"
       >
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your username!">
+          <nz-form-control nzErrorTip="Please input your email!">
             <nz-input-group nzPrefixIcon="user">
               <input
-                type="text"
+                type="email"
                 nz-input
                 formControlName="userName"
-                placeholder="Username"
+                placeholder="Email"
               />
             </nz-input-group>
           </nz-form-control>

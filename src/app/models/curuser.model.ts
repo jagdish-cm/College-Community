@@ -1,9 +1,10 @@
 export interface CurUser {
   name: string;
   branch: string;
-  batch: string;
+  batchFrom: Date;
+  batchTo: Date;
   enrolNo: string;
   password: string;
   email: string;
-  mobile: number;
+  mobile: string;
 }

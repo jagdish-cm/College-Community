@@ -9,6 +9,7 @@ import {
 import { Observable, Observer } from 'rxjs';
 import { CurUser } from '../../models/curuser.model';
 import { CurUserService } from '../../services/cur-user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,8 @@ export class RegisterComponent {
 
   onSubmit(): void {
     const newUser: CurUser = {
-      batch: this.regForm.value.batch,
+      batchFrom: this.regForm.value.batchFrom,
+      batchTo: this.regForm.value.batchTo,
       enrolNo: this.regForm.value.enrolNo,
       name: this.regForm.value.name,
       mobile: this.regForm.value.mobile,
@@ -30,13 +32,22 @@ export class RegisterComponent {
       password: this.regForm.value.password
     };
 
-    this.curUserService.setUser(newUser);
-    console.log(this.curUserService.getUser());
+    this.authUser.createUser(
+      newUser.batchFrom,
+      newUser.batchTo,
+      newUser.enrolNo,
+      newUser.name,
+      newUser.mobile,
+      newUser.email,
+      newUser.branch,
+      newUser.password
+    );
   }
 
-  constructor(public curUserService: CurUserService, private fb: FormBuilder) {
+  constructor(public authUser: AuthService, private fb: FormBuilder) {
     this.regForm = this.fb.group({
-      batch: ['', [Validators.required]],
+      batchFrom: ['', [Validators.required]],
+      batchTo: ['', [Validators.required]],
       enrollNo: ['', [Validators.required, Validators.maxLength(3)]],
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required]],

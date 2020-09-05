@@ -92,6 +92,7 @@
         <nz-upload
           nzType="drag"
           [nzMultiple]="true"
+          nzListType="picture-card"
           nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           (nzChange)="handleChange($event)"
         >
@@ -102,7 +103,7 @@
             Click or drag file to this area to upload
           </p>
           <p class="ant-upload-hint">
-            Upload images only
+            Upload any multimedia file
           </p>
         </nz-upload>
         <nz-modal

@@ -10,6 +10,7 @@ import {
 import { timeUnits } from 'ng-zorro-antd/core/time/time';
 import { PostService } from '../../../services/post.service';
 import { Post } from '../../../models/post.model';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-create-post',
@@ -18,11 +19,15 @@ import { Post } from '../../../models/post.model';
 })
 export class CreatePostComponent implements OnInit {
   createdPost: FormGroup;
+  // public editPost: Post;
+  // mode: string = 'create';
+  // public postId: string = null;
 
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route: ActivatedRoute
   ) {
     this.createdPost = this.fb.group({
       postedby: ['Jagdish', [Validators.required]],
@@ -50,7 +55,16 @@ export class CreatePostComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    //   if (paramMap.has('postId')) {
+    //     this.mode = 'edit';
+    //     this.postId = paramMap.get('postId');
+    //     this.editPost = this.postService.getPost(this.postId);
+    //   }
+    // });
+  }
+
   previewVisible = false;
   username: string = 'Jagdish';
   postTime;
@@ -61,7 +75,8 @@ export class CreatePostComponent implements OnInit {
   handleChange({ file, fileList }: NzUploadChangeParam): void {
     const status = file.status;
     if (status !== 'uploading') {
-      console.log(file, fileList);
+      // console.log(file, fileList);
+      console.log(file);
     }
     if (status === 'done') {
       this.msg.success(`${file.name} file uploaded successfully.`);
