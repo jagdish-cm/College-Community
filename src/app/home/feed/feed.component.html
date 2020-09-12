@@ -1,3 +1,6 @@
-<app-create-post></app-create-post>
-<hr />
+<div *ngIf="isLoggedIn">
+  <app-create-post></app-create-post>
+  <hr />
+</div>
+
 <app-posts></app-posts>

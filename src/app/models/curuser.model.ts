@@ -1,4 +1,5 @@
 export interface CurUser {
+  _id: string;
   name: string;
   branch: string;
   batchFrom: Date;

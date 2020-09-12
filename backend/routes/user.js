@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const checkAuth = require("../middleware/check-auth");
 const jwt = require("jsonwebtoken");
 
 router.post("/signup", (req, res, next) => {
@@ -16,12 +17,15 @@ router.post("/signup", (req, res, next) => {
       email: req.body.email,
       mobile: req.body.mobile
     });
+    console.log(user);
     user
       .save()
       .then(result => {
+        console.log("user created");
         res.status(201).json({ message: "User created", result: result });
       })
       .catch(err => {
+        console.log(err);
         res.status(500).json({
           error: err
         });
@@ -46,8 +50,7 @@ router.post("/login", (req, res, next) => {
       }
       const token = jwt.sign(
         { email: fetchedUser.email, userId: fetchedUser._id },
-        "sercret_and_longer_string",
-        { expiresIn: "24h" }
+        "sercret_and_longer_string"
       );
       res.status(200).json({
         token: token
@@ -56,6 +59,17 @@ router.post("/login", (req, res, next) => {
     .catch(err => {
       console.log(err);
       return res.status(401).json({ message: "Auth failed" });
+    });
+});
+
+router.get("/getCurUserInfo", checkAuth, (req, res, next) => {
+  console.log("we are here");
+  User.findById(req.userData.userId)
+    .then(user => {
+      return res.status(201).json({ user: user });
+    })
+    .catch(err => {
+      console.log(err + " id not found");
     });
 });
 

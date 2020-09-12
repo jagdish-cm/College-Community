@@ -15,6 +15,11 @@
 }
 
 a:not([href]):not([tabindex]) {
-    color: rgb(24,144,255);
-    text-decoration: none;
+  color: rgb(24, 144, 255);
+  text-decoration: none;
+}
+
+nz-spin {
+  display: inline-block;
+  margin-right: 16px;
 }

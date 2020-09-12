@@ -11,6 +11,9 @@ import { timeUnits } from 'ng-zorro-antd/core/time/time';
 import { PostService } from '../../../services/post.service';
 import { Post } from '../../../models/post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { Subscription } from 'rxjs';
+import { CurUser } from '../../../models/curuser.model';
 
 @Component({
   selector: 'app-create-post',
@@ -22,13 +25,39 @@ export class CreatePostComponent implements OnInit {
   // public editPost: Post;
   // mode: string = 'create';
   // public postId: string = null;
+  curUserAvailable: boolean = false;
+  curUser;
 
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
     private fb: FormBuilder,
+    private authService: AuthService,
     private route: ActivatedRoute
-  ) {
+  ) {}
+
+  onSubmit(): void {
+    this.postTime = Date.now();
+    this.postService.addPost(
+      null,
+      // this.createdPost.value.postedby,
+      this.curUser._id,
+      this.postTime,
+      this.createdPost.value.postContent,
+      // this.createdPost.value.designation,
+      // this.createdPost.value.profileImg,
+      0,
+      0
+    );
+  }
+
+  ngOnInit(): void {
+    this.curUser = this.route.snapshot.data.curUser;
+    this.curUser = this.curUser.user;
+    console.log(this.curUser);
+    if (this.curUser) {
+      this.curUserAvailable = true;
+    }
     this.createdPost = this.fb.group({
       postedby: ['Jagdish', [Validators.required]],
       time: ['', [Validators.required]],
@@ -39,30 +68,6 @@ export class CreatePostComponent implements OnInit {
         [Validators.required]
       ]
     });
-  }
-
-  onSubmit(): void {
-    this.postTime = Date.now();
-    this.postService.addPost(
-      null,
-      this.createdPost.value.postedby,
-      this.postTime,
-      this.createdPost.value.postContent,
-      this.createdPost.value.designation,
-      this.createdPost.value.profileImg,
-      0,
-      0
-    );
-  }
-
-  ngOnInit(): void {
-    // this.route.paramMap.subscribe((paramMap: ParamMap) => {
-    //   if (paramMap.has('postId')) {
-    //     this.mode = 'edit';
-    //     this.postId = paramMap.get('postId');
-    //     this.editPost = this.postService.getPost(this.postId);
-    //   }
-    // });
   }
 
   previewVisible = false;

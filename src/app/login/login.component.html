@@ -68,11 +68,25 @@
           nz-button
           class="login-form-button login-form-margin"
           [nzType]="'primary'"
+          (click)="loadingF()"
+          *ngIf="!isLoading"
         >
           Log in
         </button>
         Or <a [routerLink]="['/login/reg']"> register now! </a>
       </form>
+      <div class="container-fluid mt-3">
+        <div
+          *ngIf="isLoading"
+          class="d-flex align-items-center justify-content-center"
+        >
+          <nz-spin
+            nzSimple
+            [nzSize]="'large'"
+            nzTip="Getting you onboard..."
+          ></nz-spin>
+        </div>
+      </div>
     </div>
   </div>
 </div>

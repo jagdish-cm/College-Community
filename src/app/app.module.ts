@@ -20,7 +20,7 @@ import { NotesComponent } from './stdmat/notes/notes.component';
 import { PapersComponent } from './stdmat/papers/papers.component';
 import { TutorialsComponent } from './stdmat/tutorials/tutorials.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
@@ -96,12 +96,25 @@ import { NzResizableModule } from 'ng-zorro-antd/resizable';
 import { RegisterComponent } from './login/register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { OnepostComponent } from './home/feed/posts/onepost/onepost.component';
+import { AuthInterceptor } from './services/auth-interceptor';
+import { AuthGuard } from './services/auth.guard';
+import { PostsResolverService } from './home/feed/posts/posts-resolver.service';
+import { PostUserResolverService } from './home/feed/posts/onepost/post-user-resolver.service';
+import { CurUserResolveService } from './services/cur-user-resolve.service';
 
 registerLocaleData(en);
 
 const routes: Routes = [
   // { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    component: HomeComponent,
+    resolve: {
+      posts: PostsResolverService,
+      curUser: CurUserResolveService
+      // postUser: PostUserResolverService
+    }
+  },
 
   {
     path: 'stdmat',
@@ -114,8 +127,12 @@ const routes: Routes = [
     ]
   },
 
-  { path: 'assigns', component: AssignsComponent },
-  { path: 'edit/:postId', component: CreatePostComponent },
+  { path: 'assigns', component: AssignsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'edit/:postId',
+    component: CreatePostComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'login',
     children: [
@@ -224,7 +241,14 @@ const routes: Routes = [
     NzWaveModule,
     NzResizableModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [
+    { provide: NZ_I18N, useValue: en_US },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AuthGuard,
+    PostsResolverService,
+    PostUserResolverService,
+    CurUserResolveService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -35,7 +35,7 @@
                       <input
                         type="number"
                         nz-input
-                        formControlName="enrollNo"
+                        formControlName="enrolNo"
                         placeholder="Enter 3 digit enrollment no"
                       />
                     </nz-form-control>
@@ -139,11 +139,23 @@
                       [nzSm]="{ span: 16, offset: 16 }"
                     >
                       <button type="submit" nz-button nzType="primary">
-                        Submit
+                        Sign Up
                       </button>
                     </nz-form-control>
                   </nz-form-item>
                 </form>
+                <div class="container-fluid mt-3">
+                  <div
+                    *ngIf="isLoading"
+                    class="d-flex align-items-center justify-content-center"
+                  >
+                    <nz-spin
+                      nzSimple
+                      [nzSize]="'large'"
+                      nzTip="Getting you onboard..."
+                    ></nz-spin>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

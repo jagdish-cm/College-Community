@@ -20,8 +20,11 @@ export class RegisterComponent {
   regForm: FormGroup;
   cuser: CurUser;
 
+  isLoading: boolean = false;
   onSubmit(): void {
+    this.isLoading = true;
     const newUser: CurUser = {
+      _id: null,
       batchFrom: this.regForm.value.batchFrom,
       batchTo: this.regForm.value.batchTo,
       enrolNo: this.regForm.value.enrolNo,
@@ -31,6 +34,7 @@ export class RegisterComponent {
       branch: this.regForm.value.branch,
       password: this.regForm.value.password
     };
+    console.log(newUser);
 
     this.authUser.createUser(
       newUser.batchFrom,
@@ -48,7 +52,7 @@ export class RegisterComponent {
     this.regForm = this.fb.group({
       batchFrom: ['', [Validators.required]],
       batchTo: ['', [Validators.required]],
-      enrollNo: ['', [Validators.required, Validators.maxLength(3)]],
+      enrolNo: ['', [Validators.required, Validators.maxLength(3)]],
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],

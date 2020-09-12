@@ -85,12 +85,17 @@
             ><span class="fa fa-tasks"></span> Assignments</a
           >
         </li>
-        <li class="nav-item mr-5 ">
+        <li class="nav-item mr-5 " *ngIf="!isLoggedIn">
           <a
             class="nav-link"
             [routerLink]="['/login']"
             routerLinkActive="active"
             ><span class="fa fa-user"></span> Log In</a
+          >
+        </li>
+        <li class="nav-item mr-5 " *ngIf="isLoggedIn">
+          <a class="nav-link " (click)="onLogout()"
+            ><span class="fa fa-user"></span> Logout</a
           >
         </li>
       </ul>

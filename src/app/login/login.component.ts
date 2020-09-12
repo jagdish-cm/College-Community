@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthService) {}
+  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -18,9 +19,13 @@ export class LoginComponent implements OnInit {
       remember: [true]
     });
   }
+
+  loadingF() {}
+
   loginForm!: FormGroup;
   value?: string;
   submitForm(): void {
+    this.isLoading = true;
     for (const i in this.loginForm.controls) {
       this.loginForm.controls[i].markAsDirty();
       this.loginForm.controls[i].updateValueAndValidity();

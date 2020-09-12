@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../../../models/post.model';
 import { PostService } from '../../../services/post.service';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-posts',
@@ -9,20 +8,21 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit {
-  constructor(private postsService: PostService) {}
+  constructor(
+    private postsService: PostService,
+    private route: ActivatedRoute
+  ) {}
 
   isLoading: boolean = false;
-  posts: Post[];
-  private postsSub: Subscription;
+  posts;
+  nposts;
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.postsService.getPosts();
-    this.postsSub = this.postsService
-      .getPostsUpdateListener()
-      .subscribe((oposts: Post[]) => {
-        this.posts = oposts;
-        this.isLoading = false;
-      });
+    this.nposts = this.route.snapshot.data.posts;
+    this.nposts = this.nposts.posts;
+    console.log(this.nposts);
+    this.posts = this.nposts.sort((a, b) => b.time - a.time);
+    this.isLoading = false;
   }
 }
