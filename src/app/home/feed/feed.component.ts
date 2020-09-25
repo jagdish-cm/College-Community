@@ -11,6 +11,7 @@ export class FeedComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
+    console.log('in feed comp');
     this.isLoggedIn = this.authService.isLogged();
     this.authService.authSubsListner().subscribe(isAuthenticated => {
       this.isLoggedIn = isAuthenticated;

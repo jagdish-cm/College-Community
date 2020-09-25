@@ -22,6 +22,11 @@ img {
   border-radius: 50%;
 }
 
+ckeditor {
+  border: 1px rgb(179, 179, 179) solid;
+  border-radius: 3px;
+}
+
 .up {
   padding-top: 3px;
   padding-bottom: 3px;
@@ -57,7 +62,23 @@ i[nz-icon] {
   font-size: 32px;
   color: #999;
 }
-.ant-upload-text {
-  margin-top: 8px;
-  color: #666;
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.image-preview {
+  height: 5rem 0;
+  margin: 1rem 0;
+  max-height: 5rem;
+
+  img {
+    height: 80px;
+    border-radius: 3px;
+  }
 }

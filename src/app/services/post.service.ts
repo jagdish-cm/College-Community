@@ -4,12 +4,17 @@ import { Subject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, filter, delay } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   private posts = new Array();
   public postsUpdated = new Subject<Post[]>();
@@ -23,27 +28,37 @@ export class PostService {
     // designation: string,
     // profileimg: string,
     lcounts: number,
-    comcounts: number
+    comcounts: number,
+    image: File
   ) {
-    const newPost: Post = {
-      id: null,
-      creator: creator,
-      // username: username,
-      time: time,
-      postContent: postContent,
-      // designation: designation,
-      // profileimg: profileimg,
-      lcounts: lcounts,
-      comcounts: comcounts
-    };
+    const newpost = new FormData();
+    console.log('at 1');
+    newpost.append('creator', creator);
+    newpost.append('time', time);
+    newpost.append('postContent', postContent);
+    newpost.append('lcounts', lcounts.toString());
+    newpost.append('comcounts', comcounts.toString());
+    console.log('at 2');
+    if (image) {
+      console.log('image present');
+      newpost.append('image', image, creator + time);
+    } else {
+      console.log('no image');
+      newpost.append('image', null);
+    }
+    console.log('at 3');
     this.http
-      .post<{ postid: string }>('http://localhost:3000/api/posts', newPost)
+      .post<{ post; postid: string }>(
+        'http://localhost:3000/api/posts',
+        newpost
+      )
       .subscribe(resdata => {
-        newPost.id = resdata.postid;
-        console.log(newPost);
-        this.posts.push(newPost);
-        this.postsUpdated.next([...this.posts]);
+        this.reloadComponent();
       });
+  }
+
+  reloadComponent() {
+    window.location.reload();
   }
 
   getPostsUpdateListener() {
@@ -55,26 +70,25 @@ export class PostService {
   }
 
   getPosts(): Observable<any> {
-    return this.http
-      .get<[]>('http://localhost:3000/api/posts')
-      .pipe
-      // map(postData => {
-      //   return postData.posts.map(post => {
-      //     return {
-      //       postId: post._id,
-      //       creator: post.creator,
-      //       // username: post.username,
-      //       // designation: post.designation,
-      //       // profileimg: post.profileimg,
-      //       time: post.time,
-      //       lcounts: post.lcounts,
-      //       postContent: post.postContent,
-      //       //   comments: Comment[],
-      //       comcounts: post.comcounts
-      //     };
-      //   });
-      // })
-      ();
+    return this.http.get<[]>('http://localhost:3000/api/posts');
+    // .pipe
+    // map(postData => {
+    //   return postData.posts.map(post => {
+    //     return {
+    //       postId: post._id,
+    //       creator: post.creator,
+    //       // username: post.username,
+    //       // designation: post.designation,
+    //       // profileimg: post.profileimg,
+    //       time: post.time,
+    //       lcounts: post.lcounts,
+    //       postContent: post.postContent,
+    //       //   comments: Comment[],
+    //       comcounts: post.comcounts
+    //     };
+    //   });
+    // })
+    // ();
     // .subscribe(trnasformedPosts => {
     //   trnasformedPosts.map(post => {
     //     this.postUserSub(post.creator).subscribe(user => {
@@ -97,27 +111,30 @@ export class PostService {
     // designation: string,
     // profileimg: string,
     lcounts: number,
-    comcounts: number
+    comcounts: number,
+    image: File,
+    imagePath: string
   ) {
-    const post: Post = {
-      id: id,
-      creator: creator,
-      // username: username,
-      time: time,
-      postContent: postContent,
-      // designation: designation,
-      // profileimg: profileimg,
-      lcounts: lcounts,
-      comcounts: comcounts
-    };
+    const newpost = new FormData();
+    newpost.append('creator', creator);
+    newpost.append('time', time);
+    newpost.append('postContent', postContent);
+    newpost.append('lcounts', lcounts.toString());
+    newpost.append('comcounts', comcounts.toString());
+    newpost.append('imagePath', imagePath);
+    console.log('at 2');
+    if (image) {
+      console.log('image present');
+      newpost.append('image', image, creator + time);
+    } else {
+      console.log('no image');
+      newpost.append('image', null);
+    }
+    console.log('at 3');
     this.http
-      .put('http://localhost:3000/api/posts/' + id, post)
+      .put('http://localhost:3000/api/posts/' + id, newpost)
       .subscribe(() => {
-        const updatedPosts = [...this.posts];
-        const updateIndex = updatedPosts.findIndex(p => p.id === post.id);
-        updatedPosts[updateIndex] = post;
-        this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
+        this.reloadComponent();
       });
   }
 
@@ -154,11 +171,9 @@ export class PostService {
 
   deletePost(postId: string) {
     this.http
-      .delete('http://localhost:3000/api/posts/' + postId)
-      .subscribe(() => {
-        const updatedPosts = this.posts.filter(post => post.id !== postId);
-        this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
+      .delete<{ message: string }>('http://localhost:3000/api/posts/' + postId)
+      .subscribe(message => {
+        this.reloadComponent();
       });
   }
 }

@@ -7,8 +7,16 @@ import { AuthService } from './auth.service';
 })
 export class CurUserResolveService implements Resolve<any> {
   constructor(private authService: AuthService) {}
+  isLogged: boolean = false;
 
   resolve(route: ActivatedRouteSnapshot) {
+    this.isLogged = this.authService.isLogged();
+    this.authService.authSubsListner().subscribe(value => {
+      this.isLogged = value;
+    });
+    if (!this.isLogged) {
+      return null;
+    }
     return this.authService.setCurUserInfo();
   }
 }

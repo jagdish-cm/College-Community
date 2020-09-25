@@ -13,6 +13,18 @@ $gbg: rgb(238, 238, 238);
   border: none;
 }
 
+.ck-editor__editable {
+  min-height: 10rem;
+}
+
+.ckeditor_announce_title {
+  min-height: 5rem;
+}
+
+.ckeditor_announce_description {
+  min-height: 10rem;
+}
+
 @mixin border {
   border: 1px $grayed-border solid;
   border-radius: 3px;

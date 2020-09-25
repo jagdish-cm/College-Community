@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
@@ -21,6 +22,7 @@ import { PapersComponent } from './stdmat/papers/papers.component';
 import { TutorialsComponent } from './stdmat/tutorials/tutorials.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgFileValidatorLibModule } from 'angular-file-validator';
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
@@ -239,7 +241,9 @@ const routes: Routes = [
     NzTypographyModule,
     NzUploadModule,
     NzWaveModule,
-    NzResizableModule
+    NzResizableModule,
+    CKEditorModule,
+    NgFileValidatorLibModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

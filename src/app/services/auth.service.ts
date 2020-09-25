@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CurUser } from '../models/curuser.model';
-import {
-  Subscriber,
-  Subject,
-  AsyncSubject,
-  ReplaySubject,
-  Observable
-} from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -41,19 +35,27 @@ export class AuthService {
     mobile: string,
     email: string,
     branch: string,
-    password: string
+    password: string,
+    profilepic: File
   ) {
-    const regUser: CurUser = {
-      _id: null,
-      name: name,
-      branch: branch,
-      enrolNo: enrolNo,
-      password: password,
-      email: email,
-      batchFrom: batchFrom,
-      batchTo: batchTo,
-      mobile: mobile
-    };
+    const regUser = new FormData();
+    regUser.append('batchFrom', batchFrom.toString());
+    regUser.append('batchTo', batchTo.toString());
+    regUser.append(
+      'enrolNo',
+      batchFrom.getFullYear().toString() + '/CTAE/' + enrolNo
+    );
+    regUser.append('name', name);
+    regUser.append('mobile', mobile);
+    regUser.append('email', email);
+    regUser.append('branch', branch);
+    regUser.append('password', password);
+    if (profilepic) {
+      regUser.append('profilepic', profilepic, enrolNo + Date.now());
+    } else {
+      regUser.append('profilepic', null);
+    }
+
     this.http
       .post('http://localhost:3000/api/user/signup', regUser)
       .subscribe(result => {
@@ -62,8 +64,37 @@ export class AuthService {
       });
   }
 
+  createFacUser(
+    employeeId: string,
+    name: string,
+    mobile: string,
+    email: string,
+    branch: string,
+    password: string,
+    profilepic: File
+  ) {
+    const regUser = new FormData();
+    regUser.append('enrolNo', employeeId);
+    regUser.append('name', name);
+    regUser.append('mobile', mobile);
+    regUser.append('email', email);
+    regUser.append('branch', branch);
+    regUser.append('password', password);
+    if (profilepic) {
+      regUser.append('profilepic', profilepic, employeeId + Date.now());
+    } else {
+      regUser.append('profilepic', null);
+    }
+
+    this.http
+      .post('http://localhost:3000/api/user/signupfac', regUser)
+      .subscribe(result => {
+        console.log(result);
+        this.router.navigate(['/login']);
+      });
+  }
+
   setCurUserInfo(): Observable<any> {
-    console.log('here');
     return this.http
       .get('http://localhost:3000/api/user/getCurUserInfo')
       .pipe();
@@ -89,9 +120,12 @@ export class AuthService {
         if (this.atoken) {
           this.isLog = true;
           this.authStatus.next(true);
-          this.curUser.next(this.cUser);
-          this.saveAuthData(token);
-          this.router.navigate(['/']);
+          this.setCurUserInfo().subscribe(user => {
+            this.cUser = user;
+            this.curUser.next(this.cUser);
+            this.saveAuthData(token);
+            this.router.navigate(['/']);
+          });
         }
       });
   }
@@ -126,10 +160,14 @@ export class AuthService {
 
   autoAuthUser() {
     const authToken = this.getAuthData();
+    console.log('not auth');
     if (authToken) {
+      console.log('auth set');
       this.atoken = authToken;
       this.isLog = true;
-      this.setCurUserInfo();
+      this.setCurUserInfo().subscribe(user => {
+        this.cUser = user;
+      });
       this.curUser.next(this.cUser);
       this.authStatus.next(true);
     }

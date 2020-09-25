@@ -13,7 +13,8 @@ const postSchema = mongoose.Schema({
   lcounts: Number,
   postContent: String,
   //   comments: Comment[],
-  comcounts: Number
+  comcounts: Number,
+  imagePath: String
 });
 
 module.exports = mongoose.model("Post", postSchema);

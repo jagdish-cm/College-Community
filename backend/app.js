@@ -1,9 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
+const announceRouter = require("./routes/announce");
 
 mongoose
   .connect(
@@ -27,6 +29,9 @@ app.use(cors()); // Use this after the variable declaration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/images", express.static(path.join("backend/images")));
+app.use("/announceFiles", express.static(path.join("backend/announceFiles")));
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -44,5 +49,6 @@ app.use((req, res, next) => {
 
 app.use("/api/posts", postRouter);
 app.use("/api/user", userRouter);
+app.use("/api/announce", announceRouter);
 
 module.exports = app;

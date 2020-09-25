@@ -6,23 +6,57 @@ const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
-router.post("", checkAuth, (req, res, next) => {
-  const post = new Post({
-    creator: req.userData.userId,
-    // username: req.body.username,
-    // designation: req.body.designation,
-    // profileimg: req.body.profileimg,
-    time: req.body.time,
-    lcounts: req.body.lcounts,
-    postContent: req.body.postContent,
-    //   comments: Comment[],
-    comcounts: req.body.comcounts
-  });
-  post.save().then(createdPost => {
-    console.log(createdPost);
-    res.status(201).json({ postid: createdPost._id });
-  });
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg"
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error("invalid mime type");
+    if (isValid) {
+      error = null;
+    }
+    cb(error, "backend/images");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname
+      .toLowerCase()
+      .split(" ")
+      .join("-");
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, name + "-" + Date.now() + "." + ext);
+  }
 });
+
+router.post(
+  "",
+  checkAuth,
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    const post = new Post({
+      creator: req.userData.userId,
+      // username: req.body.username,
+      // designation: req.body.designation,
+      // profileimg: req.body.profileimg,
+      time: req.body.time,
+      lcounts: req.body.lcounts,
+      postContent: req.body.postContent,
+      //   comments: Comment[],
+      comcounts: req.body.comcounts
+    });
+    if (req.file) {
+      const url = req.protocol + "://" + req.get("host");
+      post["imagePath"] = url + "/images/" + req.file.filename;
+    }
+    post.save().then(createdPost => {
+      console.log(createdPost);
+      res.status(201).json({ ...createdPost.toObject(), id: createdPost._id });
+    });
+  }
+);
 
 router.get("", (req, res, next) => {
   var docs = [];
@@ -41,6 +75,7 @@ router.get("", (req, res, next) => {
         docs.push(user1);
         console.log(docs.length);
         if (docs.length === docslength) {
+          // console.log(docs);
           console.log("response sent");
           res.json({
             posts: docs
@@ -51,29 +86,43 @@ router.get("", (req, res, next) => {
   });
 });
 
-router.put("/:id", checkAuth, (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
-    username: req.body.username,
-    designation: req.body.designation,
-    time: req.body.time,
-    lcounts: req.body.lcounts,
-    postContent: req.body.postContent,
-    //   comments: Comment[],
-    comcounts: req.body.comcounts,
-    profileimg: req.body.profileimg
-  });
-  Post.updateOne({ _id: req.params.id }, post).then(result => {
-    console.log(result);
-    res.status(201).json({ message: "Update successful !" });
-  });
-});
+router.put(
+  "/:id",
+  checkAuth,
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    console.log(req.body.creator);
+    const post = new Post({
+      _id: req.params.id,
+      creator: req.body.creator,
+      time: req.body.time,
+      postContent: req.body.postContent,
+      lcounts: req.body.lcounts,
+      comcounts: req.body.comcounts
+    });
+    if (req.file) {
+      const url = req.protocol + "://" + req.get("host");
+      post["imagePath"] = url + "/images/" + req.file.filename;
+    } else {
+      post["imagePath"] = req.body.imagePath;
+    }
+
+    Post.updateOne({ _id: req.params.id }, post)
+      .then(result => {
+        console.log(result);
+        res.status(201).json({ message: "Update successful !" });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+);
 
 router.delete("/:id", checkAuth, (req, res, next) => {
   console.log("id of post " + req.params.id);
   Post.deleteOne({ _id: req.params.id }).then(() => {
     console.log("deleted in backend");
-    res.status(201).end();
+    res.status(201).json({ message: "post deleted" });
   });
 });
 

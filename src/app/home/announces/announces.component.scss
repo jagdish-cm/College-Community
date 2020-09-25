@@ -22,3 +22,25 @@
   font-size: smaller;
   color: $gfont;
 }
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
+button :focus {
+  outline: 0 !important;
+}
+
+ckeditor {
+  border: 1px rgb(179, 179, 179) solid;
+  border-radius: 3px;
+}
+
+.fa-plus {
+  font-size: smaller;
+}
+
+input[type="file"] {
+  display: none;
+}

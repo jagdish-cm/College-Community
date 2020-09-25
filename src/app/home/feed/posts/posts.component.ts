@@ -18,6 +18,7 @@ export class PostsComponent implements OnInit {
   nposts;
 
   ngOnInit(): void {
+    console.log('in posts comp');
     this.isLoading = true;
     this.nposts = this.route.snapshot.data.posts;
     this.nposts = this.nposts.posts;

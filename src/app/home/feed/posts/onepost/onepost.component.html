@@ -16,23 +16,29 @@
           <div class="col px-0">{{ post.time | date: "d MMM, h:m aa" }}</div>
         </div>
       </div>
-      <div class=" col-sm-4 col-md-1 col-lg-1 " *ngIf="isLoggedIn">
+      <div class=" col-sm-4 col-md-1 col-lg-1 ">
         <span
           nz-popover
           [(nzPopoverVisible)]="visible"
           (nzPopoverVisibleChange)="change()"
           nzPopoverTrigger="click"
           [nzPopoverContent]="contentTemplate"
+          nzPopoverPlacement="bottom"
         >
           <a class="fa fa-ellipsis-h d-flex justify-content-end tdot"></a>
         </span>
         <ng-template #contentTemplate>
-          <a (click)="onDelete(post.id)">Delete</a>
+          <a (click)="onDelete(post._id)" *ngIf="post.creator == curUser._id"
+            >Delete</a
+          >
+          <hr />
+          <a>Share</a>
           <hr />
           <a
             data-toggle="modal"
             data-target="#editModal"
             (click)="onEdit(post.id)"
+            *ngIf="post.creator == curUser._id"
             >Edit</a
           >
         </ng-template>
@@ -40,7 +46,12 @@
     </div>
     <!-- post data -->
     <div class="row pt-3">
-      <div class="col postdata  mx-4">{{ post.postContent }}</div>
+      <div class="col postdata  mx-4" [innerHtml]="post.postContent"></div>
+    </div>
+    <div *ngIf="post.imagePath" class="row">
+      <div class="col">
+        <img [src]="post.imagePath" class="post-image" alt="post" />
+      </div>
     </div>
     <hr />
     <!-- post likes -->
@@ -98,7 +109,7 @@
   </div>
 </div>
 
-<div *ngIf="editPostToggle">
+<div *ngIf="editPostToggle && curUser">
   <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog mt-5" role="document">
       <div class="modal-content">
@@ -121,19 +132,23 @@
               </div>
               <div class="col-10">
                 <div class="row font-weight-bolder pt-1 px-0">
-                  {{ curUser.username }}
+                  {{ curUser.name }}
                 </div>
-                <div class="row">{{ curUser.designation }}</div>
+                <div class="row">Student</div>
               </div>
             </div>
             <div class="row">
               <div class="col input-group">
-                <textarea
-                  name="Text1"
-                  rows="5"
-                  class="mt-4 form-control"
+                <ckeditor
+                  [config]="editorConfig"
+                  [editor]="Editor"
+                  required
                   formControlName="postContent"
-                ></textarea>
+                  rows="10"
+                  data=""
+                  name="text"
+                  class="mt-4 w-100"
+                ></ckeditor>
               </div>
             </div>
           </div>
@@ -186,32 +201,25 @@
           </button>
         </div>
         <div class="modal-body">
-          <nz-upload
-            nzType="drag"
-            [nzMultiple]="true"
-            nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            (nzChange)="handleChange($event)"
+          <button
+            type="button"
+            class="btn btn-light"
+            (click)="filePicker.click()"
           >
-            <p class="ant-upload-drag-icon">
-              <i nz-icon nzType="inbox"></i>
-            </p>
-            <p class="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p class="ant-upload-hint">
-              Upload images only
-            </p>
-          </nz-upload>
-          <nz-modal
-            [nzVisible]="previewVisible"
-            [nzContent]="modalContent"
-            [nzFooter]="null"
-            (nzOnCancel)="previewVisible = false"
+            Pick Images
+          </button>
+          <input type="file" (change)="onImagePicked($event)" #filePicker />
+          <div
+            class="image-preview"
+            *ngIf="
+              imagePreview !== '' &&
+              imagePreview &&
+              createdPost.get('image').valid
+            "
           >
-            <ng-template #modalContent>
-              <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
-            </ng-template>
-          </nz-modal>
+            <img [src]="imagePreview" alt="post images" />
+          </div>
+          <img [src]="post.imagePath" alt="" />
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">

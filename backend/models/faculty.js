@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const userSchema = new mongoose.Schema({
+const facultySchema = new mongoose.Schema({
   name: { type: String },
   branch: { type: String },
-  batchFrom: { type: Date },
-  batchTo: { type: Date },
-  enrolNo: { type: String, unique: true },
+  employeeId: { type: String, unique: true },
   password: { type: String },
   email: { type: String, unique: true },
   mobile: { type: Number, unique: true },
@@ -14,5 +12,5 @@ const userSchema = new mongoose.Schema({
   profilepicPath: { type: String }
 });
 
-userSchema.plugin(uniqueValidator);
-module.exports = mongoose.model("User", userSchema);
+facultySchema.plugin(uniqueValidator);
+module.exports = mongoose.model("Faculty", facultySchema);
