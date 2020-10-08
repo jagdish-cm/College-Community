@@ -29,6 +29,8 @@ export class AnnouncesComponent implements OnInit {
   announcementForm: FormGroup;
   announceFiles: File[] = [];
   fileNames = [];
+  isLoading: boolean = false;
+  announces;
 
   ngOnInit(): void {
     this.curUser = this.route.snapshot.data.curUser;
@@ -36,46 +38,21 @@ export class AnnouncesComponent implements OnInit {
     if (this.curUser) {
       this.curUserAvailable = true;
       console.log(this.curUser);
+      this.announcementForm = this.fb.group({
+        title: ['', Validators.required],
+        description: [' '],
+        postedby: [this.curUser._id, Validators.required]
+      });
+
+      this.isLoading = true;
+      this.announces = this.route.snapshot.data.announces;
+      this.announces = this.announces.announces;
+      console.log('announcements are here');
+      console.log(this.announces);
+      this.announces = this.announces.sort((a, b) => b.time - a.time);
+      this.isLoading = true;
     }
-    this.announcementForm = this.fb.group({
-      title: ['', Validators.required],
-      description: [''],
-      postedby: [this.curUser._id, Validators.required]
-    });
   }
-
-  // get files1(): FormArray {
-  //   return this.announcementForm.get('files') as FormArray;
-  // }
-
-  // createItem(data): FormGroup {
-  //   return this.fb.group(data);
-  // }
-
-  // onFilesPicked(event: Event) {
-  //   let files = (event.target as HTMLInputElement).files;
-  //   if (files) {
-  //     console.log(files);
-  //     for (var i = 0; i < files.length; i++) {
-  //       let reader = new FileReader();
-  //       this.fileNames.push((event.target as HTMLInputElement).files[i].name);
-  //       reader.onload = (e: any) => {
-  //         let file = files[i];
-  //         const blob = new Blob([new Uint8Array(e.target.result)], {
-  //           type: file.type
-  //         });
-  //         this.files1.push(
-  //           this.createItem({
-  //             blob,
-  //             url: e.target.result
-  //           })
-  //         );
-  //       };
-  //       reader.readAsDataURL(files[i]);
-  //     }
-  //     console.log(this.announcementForm.value.files);
-  //   }
-  // }
 
   onFilesPicked(event: Event) {
     for (var i = 0; i < (event.target as HTMLInputElement).files.length; i++) {
@@ -84,8 +61,16 @@ export class AnnouncesComponent implements OnInit {
     }
   }
 
+  removeFile(i: number) {
+    if (i > -1) {
+      this.announceFiles.splice(i, 1);
+      this.fileNames.splice(i, 1);
+    }
+    console.log(this.announceFiles, this.fileNames);
+  }
+
   onSubmit() {
-    console.log(this.announcementForm.value);
+    console.log(this.announcementForm);
     let atime = Date.now();
     if (this.announcementForm.invalid) {
       console.log('invalid announcement');
@@ -98,17 +83,5 @@ export class AnnouncesComponent implements OnInit {
       atime,
       this.announceFiles
     );
-    // this.announceFiles = [];
-    // this.announcementForm.patchValue({
-    //   title: '',
-    //   description: '',
-    //   postedby: this.curUser._id
-    // });
-    // console.log(this.announceFiles);
-    // console.log(this.announcementForm.value);
   }
-
-  list = [1, 2, 3, 4, 5];
-  acontent = 'this is the firs sfdf dsfsdf t dafgasf dfsa sdfas dfas sdffa';
-  adate = Date.now();
 }

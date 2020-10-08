@@ -9,7 +9,7 @@ const announceSchema = mongoose.Schema({
   title: String,
   description: String,
   time: String,
-  filePaths: []
+  filesId: [mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model("Announcement", announceSchema);

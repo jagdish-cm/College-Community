@@ -12,13 +12,29 @@ a {
 }
 
 .card {
+  min-height: 13rem;
   &:hover {
-    background-color: $gbg;
+    background-color: rgba(128, 128, 128, 0.11);
   }
 }
 
 .search {
   border: 1px $grayed-border solid;
+  border-radius: 4px;
+}
+
+.notessec {
+  background-color: rgba(134, 203, 243, 0.123);
+  height: 100%;
+}
+
+// .full {
+//   min-height: 80%;
+// }
+
+.nhead {
+  border: rgba(134, 203, 243, 0.795) 2px solid;
+  background-color: rgba(134, 203, 243, 0.795);
   border-radius: 4px;
 }
 
@@ -54,5 +70,17 @@ a {
   span {
     background: #fff;
     padding: 0 10px;
+  }
+}
+
+.filename {
+  border: 1px solid $grayed-border;
+  border-radius: 2px;
+}
+
+.deleteButton {
+  color: $gfont;
+  :hover {
+    color: red;
   }
 }

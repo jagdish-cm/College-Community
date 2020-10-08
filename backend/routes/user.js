@@ -122,22 +122,48 @@ router.post("/login", (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        return res.status(401).json({ message: "Email not found" });
+        console.log("no user");
+        Faculty.findOne({ email: req.body.email }).then(facuser => {
+          if (!facuser) {
+            console.log("no faculty");
+            return res.status(401).json({ message: "Email not found" });
+          } else {
+            fetchedUser = facuser;
+            console.log(fetchedUser);
+            let result = bcrypt.compare(
+              req.body.password,
+              fetchedUser.password
+            );
+            if (!result) {
+              return res.status(401).json({ message: "Password not matched" });
+            } else {
+              const token = jwt.sign(
+                { email: fetchedUser.email, userId: fetchedUser._id },
+                "sercret_and_longer_string"
+              );
+              res.status(200).json({
+                token: token,
+                designation: "Faculty"
+              });
+            }
+          }
+        });
+      } else {
+        fetchedUser = user;
+        let result = bcrypt.compare(req.body.password, fetchedUser.password);
+        if (!result) {
+          return res.status(401).json({ message: "Password not matched" });
+        } else {
+          const token = jwt.sign(
+            { email: fetchedUser.email, userId: fetchedUser._id },
+            "sercret_and_longer_string"
+          );
+          res.status(200).json({
+            token: token,
+            designation: "Student"
+          });
+        }
       }
-      fetchedUser = user;
-      return bcrypt.compare(req.body.password, user.password);
-    })
-    .then(result => {
-      if (!result) {
-        return res.status(401).json({ message: "Password not matched" });
-      }
-      const token = jwt.sign(
-        { email: fetchedUser.email, userId: fetchedUser._id },
-        "sercret_and_longer_string"
-      );
-      res.status(200).json({
-        token: token
-      });
     })
     .catch(err => {
       console.log(err);
@@ -148,7 +174,13 @@ router.post("/login", (req, res, next) => {
 router.get("/getCurUserInfo", checkAuth, (req, res, next) => {
   User.findById(req.userData.userId)
     .then(user => {
-      return res.status(201).json({ user: user });
+      if (!user) {
+        Faculty.findById(req.userData.userId).then(faculty => {
+          return res.status(201).json({ user: faculty });
+        });
+      } else {
+        return res.status(201).json({ user: user });
+      }
     })
     .catch(err => {
       console.log(err + " id not found");

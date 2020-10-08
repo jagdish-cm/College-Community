@@ -74,7 +74,7 @@ export class AuthService {
     profilepic: File
   ) {
     const regUser = new FormData();
-    regUser.append('enrolNo', employeeId);
+    regUser.append('employeeId', employeeId);
     regUser.append('name', name);
     regUser.append('mobile', mobile);
     regUser.append('email', email);

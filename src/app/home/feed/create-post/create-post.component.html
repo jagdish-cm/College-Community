@@ -36,7 +36,7 @@
               <div class="row font-weight-bolder pt-1 px-0">
                 {{ curUser.name }}
               </div>
-              <div class="row">{{ post }}</div>
+              <div class="row">{{ curUser.designation }}</div>
             </div>
           </div>
           <div class="row h-auto">
@@ -113,34 +113,6 @@
         >
           <img [src]="imagePreview" alt="post images" />
         </div>
-
-        <!-- <nz-upload
-          nzType="drag"
-          [nzMultiple]="true"
-          nzListType="picture-card"
-          nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          (nzChange)="handleChange($event)"
-        >
-          <p class="ant-upload-drag-icon">
-            <i nz-icon nzType="inbox"></i>
-          </p>
-          <p class="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p class="ant-upload-hint">
-            Upload any multimedia file
-          </p>
-        </nz-upload>
-        <nz-modal
-          [nzVisible]="previewVisible"
-          [nzContent]="modalContent"
-          [nzFooter]="null"
-          (nzOnCancel)="previewVisible = false"
-        >
-          <ng-template #modalContent>
-            <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
-          </ng-template>
-        </nz-modal> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">

@@ -12,6 +12,10 @@
   max-height: 1rem;
 }
 
+.ahead {
+  max-height: 2rem;
+}
+
 .acontent {
   font-size: small;
   font-weight: 600;
@@ -43,4 +47,16 @@ ckeditor {
 
 input[type="file"] {
   display: none;
+}
+
+.filename {
+  border: 1px solid $grayed-border;
+  border-radius: 2px;
+}
+
+.deleteButton {
+  color: $gfont;
+  :hover {
+    color: red;
+  }
 }

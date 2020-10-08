@@ -24,17 +24,58 @@
               class="nav-link"
               [routerLink]="['/']"
               routerLinkActive="active"
+              (click)="unsetStdmat()"
               [routerLinkActiveOptions]="{ exact: true }"
-              ><span class="fa fa-home"></span>
-
-              Home</a
+              ><span class="fa fa-home"></span> Home</a
             ></span
           >
         </li>
 
-        <li class="nav-item dropdown mr-5  ">
+        <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle"
+            [ngClass]="{ active: stdmat }"
+            class="nav-link dropdown-toggle mr-5"
+            data-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >Study Material</a
+          >
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat']"
+              (click)="setStdmat()"
+              >All</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/books']"
+              (click)="setStdmat()"
+              >Books</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/notes']"
+              (click)="setStdmat()"
+              >Notes</a
+            >
+            <a
+              class="dropdown-item"
+              [routerLink]="['/stdmat/tutorials']"
+              (click)="setStdmat()"
+              >Tutorials</a
+            >
+            <a class="dropdown-item" [routerLink]="['/stdmat/papers']"
+              >Previous Year Papers</a
+            >
+          </div>
+        </li>
+
+        <!-- <li class="nav-item dropdown mr-5  ">
+          <a
+            class="nav-link dropdown-toggle dropdown-toggle-split"
             [routerLink]="['/stdmat']"
             routerLinkActive="active"
             id="navbarDropdown"
@@ -71,7 +112,7 @@
               >Previous Year Papers</a
             >
           </div>
-        </li>
+        </li> -->
         <!-- <li class="nav-item   mr-5 ">
           <a class="nav-link" href="#"
             ><span><fa-icon [icon]="faBell"></fa-icon></span> Notifications</a
@@ -82,6 +123,7 @@
             class="nav-link"
             [routerLink]="['/assigns']"
             routerLinkActive="active"
+            (click)="unsetStdmat()"
             ><span class="fa fa-tasks"></span> Assignments</a
           >
         </li>
@@ -90,6 +132,7 @@
             class="nav-link"
             [routerLink]="['/login']"
             routerLinkActive="active"
+            (click)="unsetStdmat()"
             ><span class="fa fa-user"></span> Log In</a
           >
         </li>

@@ -103,6 +103,11 @@ import { AuthGuard } from './services/auth.guard';
 import { PostsResolverService } from './home/feed/posts/posts-resolver.service';
 import { PostUserResolverService } from './home/feed/posts/onepost/post-user-resolver.service';
 import { CurUserResolveService } from './services/cur-user-resolve.service';
+import { AnnouncesResolverService } from './home/announces/announces-resolver.service';
+import { OneAnnounceComponent } from './home/announces/one-announce/one-announce.component';
+import { OneEventComponent } from './home/events/one-event/one-event.component';
+import { EventsResolverService } from './home/events/events-resolver.service';
+import { NotesResolverService } from './stdmat/notes/notes-resolver.service';
 
 registerLocaleData(en);
 
@@ -113,17 +118,26 @@ const routes: Routes = [
     component: HomeComponent,
     resolve: {
       posts: PostsResolverService,
-      curUser: CurUserResolveService
+      curUser: CurUserResolveService,
+      announces: AnnouncesResolverService,
+      events: EventsResolverService
       // postUser: PostUserResolverService
     }
   },
 
   {
     path: 'stdmat',
+    resolve: { curUser: CurUserResolveService },
     children: [
       { path: '', component: StdmatComponent },
       { path: 'tutorials', component: TutorialsComponent },
-      { path: 'notes', component: NotesComponent },
+      {
+        path: 'notes',
+        component: NotesComponent,
+        resolve: {
+          notes: NotesResolverService
+        }
+      },
       { path: 'books', component: BooksComponent },
       { path: 'papers', component: PapersComponent }
     ]
@@ -165,7 +179,9 @@ const routes: Routes = [
     LoginComponent,
     RegisterComponent,
     PageNotFoundComponent,
-    OnepostComponent
+    OnepostComponent,
+    OneAnnounceComponent,
+    OneEventComponent
   ],
   imports: [
     BrowserModule,

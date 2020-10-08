@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,9 @@ export class AnnounceService {
       .subscribe(resdata => {
         this.reloadComponent();
       });
+  }
+
+  getAnnounces(): Observable<any> {
+    return this.http.get<[]>('http://localhost:3000/api/announce');
   }
 }

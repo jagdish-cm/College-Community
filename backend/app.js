@@ -6,6 +6,8 @@ const path = require("path");
 const postRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const announceRouter = require("./routes/announce");
+const eventRouter = require("./routes/event");
+const notesRouter = require("./routes/notes");
 
 mongoose
   .connect(
@@ -50,5 +52,7 @@ app.use((req, res, next) => {
 app.use("/api/posts", postRouter);
 app.use("/api/user", userRouter);
 app.use("/api/announce", announceRouter);
+app.use("/api/event", eventRouter);
+app.use("/api/notes", notesRouter);
 
 module.exports = app;

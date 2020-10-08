@@ -1,63 +1,48 @@
 <div class="container-fluid my-5">
-  <div class="row align-items-center">
+  <div class="row align-items-center full">
     <!-- search and sort -->
-    <div class="col-sm-12 col-md-2 pt-4  ">
+    <div class="col-sm-12 col-md-2 pt-4  " style="min-width: 9rem;">
       <div class="form-group div-inline has-search px-1 w-sm-50">
         <span class="fa fa-search form-control-feedback"></span>
-        <input type="text" class="form-control" placeholder="Search notes..." />
+        <input
+          type="text"
+          class="form-control"
+          (input)="searchTerm$.next($event.target.value)"
+          placeholder="Search notes..."
+        />
       </div>
       <div class="dropdown div-inline px-1 my-1">
-        <button
-          class="btn btn-light dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Sort by
+        <button nz-button nzTrigger="click" nz-dropdown [nzDropdownMenu]="menu">
+          Filter &nbsp; <i class="fas fa-filter"></i>
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </div>
-
-      <div class="dropdown div-inline px-1 my-1">
-        <button
-          class="btn btn-light dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Filter by Branch
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-submenu nzTitle="Branch">
+              <ul>
+                <li *ngFor="let branch of branches" nz-menu-item>
+                  {{ branch }}
+                </li>
+              </ul>
+            </li>
+            <li nz-submenu nzTitle="Semester">
+              <ul>
+                <li *ngFor="let sem of sems" nz-menu-item>{{ sem }}</li>
+              </ul>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
       </div>
 
-      <div class="dropdown div-inline px-1 my-1">
+      <div>
         <button
-          class="btn btn-light dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
+          nz-button
+          nzType="dashed"
+          class="ml-2 my-1"
+          nzDanger
+          (click)="open()"
         >
-          Filter by sem
+          Upload
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
       </div>
     </div>
 
@@ -65,30 +50,37 @@
     <div class="col-sm-12 col-md-10 border-left">
       <div class="row">
         <div class="col display-4 pt-4 pl-4">
-          <span>Notes</span>
+          <span class="nhead">Notes</span>
         </div>
       </div>
-      <div class="row pt-4 pl-3">
-        <div *ngFor="let item of list">
+      <div class="row pt-4 pl-3 notessec">
+        <div *ngFor="let note of notes">
           <div class="col pb-3 px-0 mx-2 cd">
-            <a href="#"
-              ><div class="card " style="width: 9rem;">
-                <img
+            <a
+              ><div class="card" style="width: 9rem;">
+                <!-- <img
                   src="https://programmerspoint.in/images/data-structure-course.jpg"
                   class="card-img-top"
                   alt="https://programmerspoint.in/images/data-structure-course.jpg"
-                />
+                /> -->
                 <div class="card-body">
-                  <h5 class="card-title">{{ title }}</h5>
-                  <div class="card-text pb-3">
-                    <div>{{ subject }}</div>
+                  <h5 class="card-title w-100" style="min-height : 3rem;">
+                    {{ note.topic }}
+                  </h5>
+                  <div class="card-text">
+                    <div>{{ note.subject }}</div>
                     <hr class="my-1" />
-                    <div class="by">
-                      {{ upby }} &bull;
-                      <span class="ml-auto date">{{
-                        update | date: "d MMM"
-                      }}</span>
+                    <div class="by" style="min-height : 2rem;">
+                      {{ note.branch }} &bull; {{ note.semester }} Sem
                     </div>
+                    <button
+                      nz-button
+                      (click)="getFile(note.filename)"
+                      nzType="default"
+                      class="mt-2 w-100"
+                    >
+                      <i class="fas fa-download mr-1"></i>Download
+                    </button>
                   </div>
                 </div>
               </div></a
@@ -99,3 +91,138 @@
     </div>
   </div>
 </div>
+
+<nz-drawer
+  [nzPlacement]="placement"
+  [nzBodyStyle]="{ overflow: 'auto' }"
+  [nzMaskClosable]="false"
+  [nzWidth]="720"
+  [nzVisible]="visible"
+  nzTitle="Upload Notes"
+  [nzHeight]="400"
+  (nzOnClose)="close()"
+  class="mt-5"
+  nzZIndex="2000"
+>
+  <form nz-form [formGroup]="notesForm">
+    <div class="modal-body pt-0 pb-3">
+      <div class="row h-auto">
+        <div class="col input-group">
+          <nz-form-item class="w-100 mr-3" style="min-width: 18.5rem">
+            <nz-form-label nzRequired nzFor="topic">Topic</nz-form-label>
+            <nz-form-control
+              nzHasFeedback
+              nzErrorTip="Topic name is required !"
+            >
+              <input
+                nz-input
+                formControlName="topic"
+                placeholder="Enter topic"
+                type="text"
+                id="topic"
+              />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class="w-25 mr-4" style="min-width: 18.5rem">
+            <nz-form-label nzRequired>Branch</nz-form-label>
+            <nz-form-control nzHasFeedback>
+              <nz-select
+                name="Branch"
+                formControlName="branch"
+                nzPlaceHolder="Select your branch"
+              >
+                <nz-option
+                  *ngFor="let branch of branches"
+                  nzValue="{{ branch }}"
+                  nzLabel="{{ branch }}"
+                ></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class="mr-4" style="min-width: 18.5rem">
+            <nz-form-label nzRequired>Semester</nz-form-label>
+            <nz-form-control nzHasFeedback>
+              <nz-select
+                name="semester"
+                formControlName="semester"
+                nzPlaceHolder="Select Semester"
+              >
+                <nz-option
+                  *ngFor="let sem of sems"
+                  nzValue="{{ sem }}"
+                  nzLabel="{{ sem }}"
+                ></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class="w-50" style="min-width: 18rem">
+            <nz-form-label nzRequired>Subject</nz-form-label>
+            <nz-form-control nzHasFeedback [nzErrorTip]="subError">
+              <input
+                nz-input
+                formControlName="subject"
+                placeholder="Enter subject"
+                type="text"
+              />
+              <ng-template #subError let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Please input subject name !
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+
+          <button
+            nz-button
+            *ngIf="!fileName"
+            type="button"
+            (click)="filePicker.click()"
+            nzType="dashed"
+            class="w-100"
+            nzDanger
+          >
+            Add file
+          </button>
+          <span
+            *ngIf="submitFileError && !notesForm.get('file').valid"
+            style="color: #ff4d76;"
+          >
+            Please select a file</span
+          >
+          <div class="my-2 font w-100" *ngIf="fileName">
+            File :
+            <div
+              class="font-weight-lighter font-smaller w-100 mt-3 mr-3 px-3 py-2 filename"
+            >
+              <div class="row">
+                <div class="col-10">{{ fileName }}</div>
+                <a
+                  (click)="removeFile()"
+                  class="col-2 d-flex justify-content-end"
+                >
+                  <a class="deleteButton my-auto">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </a>
+                </a>
+              </div>
+            </div>
+          </div>
+          <input
+            type="file"
+            style="display: none;"
+            (change)="onFilePicked($event)"
+            #filePicker
+          />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button nz-button nzType="primary" (click)="onSubmit()">
+        Save
+      </button>
+    </div>
+  </form>
+</nz-drawer>
