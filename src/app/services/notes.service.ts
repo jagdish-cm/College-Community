@@ -86,6 +86,19 @@ export class NotesService {
     );
   }
 
+  filterRes(filterItems: object) {
+    // let s;
+    // filterItems.subscribe(result => {
+    //   console.log(result);
+    //   s = result;
+    // });
+    console.log(filterItems);
+    return this.http.post(
+      'http://localhost:3000/api/notes/filter',
+      filterItems
+    );
+  }
+
   searchEntries(term) {
     console.log(term);
     let search = { search: term };

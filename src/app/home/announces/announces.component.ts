@@ -31,26 +31,32 @@ export class AnnouncesComponent implements OnInit {
   fileNames = [];
   isLoading: boolean = false;
   announces;
+  curUserDes;
 
   ngOnInit(): void {
     this.curUser = this.route.snapshot.data.curUser;
-    this.curUser = this.curUser.user;
     if (this.curUser) {
+      this.curUser = this.curUser.user;
+      this.curUserDes = this.curUser.designation;
+      console.log('designation ' + this.curUserDes);
+    }
+    this.announcementForm = this.fb.group({
+      title: ['', Validators.required],
+      description: [' '],
+      postedby: ['', Validators.required]
+    });
+    this.isLoading = true;
+    this.announces = this.route.snapshot.data.announces;
+    this.announces = this.announces.announces;
+    console.log('announcements are here');
+    console.log(this.announces);
+    this.announces = this.announces.sort((a, b) => b.time - a.time);
+    this.isLoading = true;
+    if (this.curUser) {
+      this.announcementForm.patchValue({ postedby: this.curUser._id });
+      this.announcementForm.get('postedby').updateValueAndValidity();
       this.curUserAvailable = true;
       console.log(this.curUser);
-      this.announcementForm = this.fb.group({
-        title: ['', Validators.required],
-        description: [' '],
-        postedby: [this.curUser._id, Validators.required]
-      });
-
-      this.isLoading = true;
-      this.announces = this.route.snapshot.data.announces;
-      this.announces = this.announces.announces;
-      console.log('announcements are here');
-      console.log(this.announces);
-      this.announces = this.announces.sort((a, b) => b.time - a.time);
-      this.isLoading = true;
     }
   }
 

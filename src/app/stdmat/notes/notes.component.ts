@@ -33,6 +33,12 @@ export class NotesComponent implements OnInit {
   notes;
   searchTerm$ = new Subject<string>();
   results: Object;
+  checked = true;
+  checkOptionOne = [];
+  checkOptionTwo = [];
+  popVisible: boolean = false;
+  filterTerm$ = new Subject<object>();
+  curUserDes: any;
 
   constructor(
     private fb: FormBuilder,
@@ -42,26 +48,31 @@ export class NotesComponent implements OnInit {
   ) {
     this.notesService.search(this.searchTerm$).subscribe(res => {
       this.notes = res;
-      console.log(this.results);
     });
   }
 
   ngOnInit(): void {
     this.curUser = this.route.snapshot.data.curUser;
-    this.curUser = this.curUser.user;
     this.notes = this.route.snapshot.data.notes;
     this.notes = this.notes.notes;
     console.log(typeof this.notes[0].date);
     this.notes = this.notes.sort((a, b) => a.date - b.date);
     console.log(this.notes);
     this.notesForm = this.fb.group({
-      creator: [this.curUser._id, Validators.required],
+      creator: ['', Validators.required],
       topic: ['', Validators.required],
       subject: ['', Validators.required],
       branch: ['', Validators.required],
       semester: ['', Validators.required],
       file: [null, [Validators.required, this.fileExtValidator]]
     });
+    if (this.curUser) {
+      this.curUser = this.curUser.user;
+      this.curUserDes = this.curUser.designation;
+      console.log('designation ' + this.curUserDes);
+      this.notesForm.patchValue({ creator: this.curUser._id });
+      this.notesForm.get('creator').updateValueAndValidity();
+    }
     this.notPlacement = 'bottomLeft';
     this.branches = [
       'Electronics',
@@ -72,6 +83,20 @@ export class NotesComponent implements OnInit {
       'Civil'
     ];
     this.sems = [1, 2, 3, 4, 5, 6, 7, 8];
+    this.branches.forEach(element => {
+      let a = {};
+      a['label'] = element;
+      a['value'] = element;
+      a['checked'] = false;
+      this.checkOptionOne.push(a);
+    });
+    this.sems.forEach(element => {
+      let a = {};
+      a['label'] = element;
+      a['value'] = element;
+      a['checked'] = false;
+      this.checkOptionTwo.push(a);
+    });
   }
 
   printCh(a: string) {
@@ -169,6 +194,42 @@ export class NotesComponent implements OnInit {
   getFile(filename: string) {
     console.log(filename);
     this.notesService.getFile(filename);
+  }
+
+  log(value: object[]): void {
+    // console.log(value);
+  }
+
+  submitFilter(): void {
+    this.popVisible = false;
+    let branchFilters = [];
+    let semFilters = [];
+    this.checkOptionOne.forEach(element => {
+      if (element.checked == true) {
+        branchFilters.push(element.value);
+      }
+    });
+    this.checkOptionTwo.forEach(element => {
+      if (element.checked == true) {
+        semFilters.push(element.value);
+      }
+    });
+    let filterItems = {};
+    filterItems['branch'] = branchFilters;
+    filterItems['sem'] = semFilters;
+    if (!branchFilters.length && !semFilters.length) {
+      console.log('not there');
+      filterItems['branch'] = this.branches;
+      filterItems['sem'] = this.sems;
+    }
+    this.notesService.filterRes(filterItems).subscribe(res => {
+      console.log(res);
+      this.notes = res;
+    });
+  }
+
+  change(value: boolean): void {
+    console.log(value);
   }
 
   list = [1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 88];

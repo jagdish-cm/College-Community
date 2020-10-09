@@ -156,4 +156,32 @@ router.post("/search", (req, res, next) => {
   });
 });
 
+router.post("/filter", (req, res, next) => {
+  let branch = req.body.branch;
+  let sem = req.body.sem;
+  console.log(req.body.branch);
+  console.log(req.body.sem);
+  if (branch.length && sem.length) {
+    Notes.find({
+      $and: [
+        { branch: { $in: req.body.branch } },
+        { semester: { $in: req.body.sem } }
+      ]
+    }).then(resData => {
+      console.log(resData);
+      res.status(200).send(resData);
+    });
+  } else {
+    Notes.find({
+      $or: [
+        { branch: { $in: req.body.branch } },
+        { semester: { $in: req.body.sem } }
+      ]
+    }).then(resData => {
+      console.log(resData);
+      res.status(200).send(resData);
+    });
+  }
+});
+
 module.exports = router;

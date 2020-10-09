@@ -23,6 +23,7 @@ export class EventsComponent implements OnInit {
   editorConfigDescription = {
     placeholder: 'Enter event description'
   };
+  curUserDes;
 
   constructor(
     private fb: FormBuilder,
@@ -32,24 +33,29 @@ export class EventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.curUser = this.route.snapshot.data.curUser;
-    this.curUser = this.curUser.user;
+    if (this.curUser) {
+      this.curUser = this.curUser.user;
+      this.curUserDes = this.curUser.designation;
+      console.log('designation ' + this.curUserDes);
+    }
+    this.eventForm = this.fb.group({
+      title: ['', Validators.required],
+      description: [' '],
+      dates: ['', Validators.required],
+      postedby: ['', Validators.required]
+    });
+    this.isLoading = true;
+    this.events = this.route.snapshot.data.events;
+    this.events = this.events.events;
+    console.log('Events are here');
+    console.log(this.events);
+    this.events = this.events.sort((a, b) => b.time - a.time);
+    this.isLoading = true;
     if (this.curUser) {
       this.curUserAvailable = true;
       console.log(this.curUser);
-      this.eventForm = this.fb.group({
-        title: ['', Validators.required],
-        description: [' '],
-        dates: ['', Validators.required],
-        postedby: [this.curUser._id, Validators.required]
-      });
-
-      this.isLoading = true;
-      this.events = this.route.snapshot.data.events;
-      this.events = this.events.events;
-      console.log('Events are here');
-      console.log(this.events);
-      this.events = this.events.sort((a, b) => b.time - a.time);
-      this.isLoading = true;
+      this.eventForm.patchValue({ postedby: this.curUser._id });
+      this.eventForm.get('postedby').updateValueAndValidity();
     }
   }
 

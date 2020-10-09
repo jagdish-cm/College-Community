@@ -12,29 +12,77 @@
         />
       </div>
       <div class="dropdown div-inline px-1 my-1">
-        <button nz-button nzTrigger="click" nz-dropdown [nzDropdownMenu]="menu">
-          Filter &nbsp; <i class="fas fa-filter"></i>
+        <button
+          nz-button
+          nzType="default"
+          nz-popover
+          nzPopoverTitle="Filter by:"
+          [(nzPopoverVisible)]="popVisible"
+          (nzPopoverVisibleChange)="change($event)"
+          nzPopoverTrigger="click"
+          [nzPopoverContent]="contentTemplate"
+        >
+          Filter &nbsp; <i class="fas fa-filter fi"></i>
         </button>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ng-template #contentTemplate>
+          <div class="conainer">
+            <div class="row">
+              <div class="col font-weight-bold">Branch:</div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <nz-checkbox-group
+                  [(ngModel)]="checkOptionOne"
+                  (ngModelChange)="log(checkOptionOne)"
+                ></nz-checkbox-group>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col font-weight-bold">Semester:</div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <nz-checkbox-group
+                  [(ngModel)]="checkOptionTwo"
+                  (ngModelChange)="log(checkOptionTwo)"
+                ></nz-checkbox-group>
+              </div>
+              <br />
+            </div>
+            <div class="row">
+              <div class="col d-flex mt-3 justify-content-center">
+                <button nz-button nzType="primary" (click)="submitFilter()" class="mx-auto">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             <li nz-submenu nzTitle="Branch">
               <ul>
                 <li *ngFor="let branch of branches" nz-menu-item>
-                  {{ branch }}
+                  <label nz-checkbox [(ngModel)]="checked">{{ branch }}</label>
+                  <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="log(checkOptionsOne)"></nz-checkbox-group>
                 </li>
               </ul>
             </li>
             <li nz-submenu nzTitle="Semester">
               <ul>
-                <li *ngFor="let sem of sems" nz-menu-item>{{ sem }}</li>
+                <li *ngFor="let sem of sems" nz-menu-item>
+                  <label nz-checkbox [(ngModel)]="checked">{{ sem }}</label>
+                </li>
               </ul>
             </li>
           </ul>
-        </nz-dropdown-menu>
+        </nz-dropdown-menu> -->
       </div>
 
       <div>
-        <button
+        <button *ngIf="curUser"
           nz-button
           nzType="dashed"
           class="ml-2 my-1"
@@ -42,6 +90,15 @@
           (click)="open()"
         >
           Upload
+        </button>
+        <button *ngIf="!curUser"
+        nz-button
+          nzType="dashed"
+          class="ml-2 my-1"
+          nzDanger
+          [routerLink]="['/login']"
+        >
+          Sign in to upload
         </button>
       </div>
     </div>
