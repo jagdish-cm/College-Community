@@ -108,6 +108,7 @@ import { OneAnnounceComponent } from './home/announces/one-announce/one-announce
 import { OneEventComponent } from './home/events/one-event/one-event.component';
 import { EventsResolverService } from './home/events/events-resolver.service';
 import { NotesResolverService } from './stdmat/notes/notes-resolver.service';
+import { BooksResolverService } from './stdmat/books/books-resolver.service';
 
 registerLocaleData(en);
 
@@ -138,7 +139,13 @@ const routes: Routes = [
           notes: NotesResolverService
         }
       },
-      { path: 'books', component: BooksComponent },
+      {
+        path: 'books',
+        component: BooksComponent,
+        resolve: {
+          books: BooksResolverService
+        }
+      },
       { path: 'papers', component: PapersComponent }
     ]
   },

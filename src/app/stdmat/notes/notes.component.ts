@@ -4,8 +4,6 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  AbstractControl,
-  ValidationErrors,
   ValidatorFn
 } from '@angular/forms';
 import {
@@ -231,11 +229,4 @@ export class NotesComponent implements OnInit {
   change(value: boolean): void {
     console.log(value);
   }
-
-  list = [1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 88];
-  title: string = 'Trees and Graphs';
-  update = Date.now();
-  upby: string = 'Binod';
-  subject: string = 'Data structures & Algos';
-  branch: string = 'CSE';
 }
