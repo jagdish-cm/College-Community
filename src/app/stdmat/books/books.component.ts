@@ -121,6 +121,15 @@ export class BooksComponent implements OnInit {
     }
   }
 
+  checkDeletable(bookCreator: string) {
+    if (!this.curUser) {
+      return false;
+    }
+    if (bookCreator === this.curUser._id) {
+      return true;
+    }
+  }
+
   fileExtValidator: ValidatorFn = (
     control: FormGroup
   ): { [key: string]: boolean } | null => {
@@ -225,5 +234,9 @@ export class BooksComponent implements OnInit {
       console.log(res);
       this.books = res;
     });
+  }
+
+  deleteFile(id: string) {
+    this.booksService.deleteFile(id);
   }
 }

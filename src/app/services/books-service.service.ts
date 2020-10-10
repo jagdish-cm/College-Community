@@ -99,4 +99,13 @@ export class BooksService {
     let search = { search: term };
     return this.http.post('http://localhost:3000/api/books/search', search);
   }
+
+  deleteFile(id: string) {
+    this.http
+      .delete('http://localhost:3000/api/books/' + id)
+      .subscribe(result => {
+        console.log(result);
+        this.reloadComponent();
+      });
+  }
 }

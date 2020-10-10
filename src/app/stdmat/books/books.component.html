@@ -105,11 +105,7 @@
               ><div class="card" style="width: 9rem;">
                 <div class="card-body">
                   <h5 class="card-title w-100" style="min-height : 3rem;">
-                    {{ book.title }} &nbsp;
-                    <i
-                      *ngIf="book.creator == curUser._id"
-                      class="ml-auto far fa-trash-alt"
-                    ></i>
+                    {{ book.title }}
                   </h5>
                   <div class="card-text">
                     <div>{{ book.author }}</div>
@@ -120,10 +116,20 @@
                     <button
                       nz-button
                       (click)="getFile(book.filename)"
-                      nzType="default"
+                      nzType="primary"
                       class="mt-2 w-100"
                     >
-                      <i class="fas fa-download mr-1"></i>Download
+                      <i class="fas fa-download mr-1 limit"></i>Download
+                    </button>
+                    <button
+                      nz-button
+                      (click)="deleteFile(book._id)"
+                      nzType="danger"
+                      *ngIf="checkDeletable(book.creator)"
+                      class="mt-2 w-100"
+                    >
+                      <i class="ml-auto far fa-trash-alt"></i>
+                      &nbsp;Delete
                     </button>
                   </div>
                 </div>

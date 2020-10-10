@@ -142,6 +142,15 @@ export class NotesComponent implements OnInit {
     }
   };
 
+  checkDeletable(bookCreator : string){
+    if(!this.curUser){
+      return false; 
+    }
+    if(bookCreator === this.curUser._id){
+      return true;
+    }
+  }
+
   createBasicNotification(position: NzNotificationPlacement): void {
     this.notification.blank(
       'Invalid File Type',

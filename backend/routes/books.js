@@ -184,4 +184,17 @@ router.post("/filter", (req, res, next) => {
   }
 });
 
+router.delete("/:id", checkAuth, (req, res, next) => {
+  console.log("bookid to delete " + req.params.id);
+  Books.findById({ _id: req.params.id }).then(book => {
+    console.log(book);
+    gfs.delete({ filename: book.filename }).then(() => {
+      Books.deleteOne({ _id: book._id }).then(() => {
+        console.log("deleted in backend");
+        res.status(201).json({ message: "book deleted" });
+      });
+    });
+  });
+});
+
 module.exports = router;
