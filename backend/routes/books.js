@@ -21,6 +21,8 @@ const conn = mongoose.createConnection(dbURI, {
 
 let gfs;
 
+
+
 conn.once("open", () => {
   //initialize the stream
   gfs = GridFsStream(conn.db, mongoose.mongo);
@@ -61,7 +63,7 @@ router.post(
     });
     console.log(res.req.file);
 
-    book.filename = res.req.file.filename;
+    book.fileId = res.req.file.id;
 
     book.save().then(newBook => {
       console.log(newBook);
@@ -188,7 +190,7 @@ router.delete("/:id", checkAuth, (req, res, next) => {
   console.log("bookid to delete " + req.params.id);
   Books.findById({ _id: req.params.id }).then(book => {
     console.log(book);
-    gfs.delete({ filename: book.filename }).then(() => {
+    gfs.remove({ _id: book.fileId }).then(() => {
       Books.deleteOne({ _id: book._id }).then(() => {
         console.log("deleted in backend");
         res.status(201).json({ message: "book deleted" });

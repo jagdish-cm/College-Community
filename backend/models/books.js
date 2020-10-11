@@ -9,7 +9,7 @@ const booksSchema = new mongoose.Schema({
   author: { type: String, required: true },
   branch: { type: String, required: true },
   semester: { type: String, required: true },
-  filename: { type: String, required: true },
+  fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
   date: String
 });
 
