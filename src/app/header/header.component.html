@@ -1,11 +1,9 @@
 <div class="container-fluid">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top nav-custom">
-    <div class="navbar-brand pb-2 font-weight-bolder">
-      CTAE Students
-    </div>
+    <div class="navbar-brand pb-2 font-weight-bolder">CTAE Students</div>
 
     <button
-      class="navbar-toggler custom-toggler "
+      class="navbar-toggler custom-toggler"
       type="button"
       data-toggle="collapse"
       data-target="#navbarSupportedContent"
@@ -13,12 +11,12 @@
       aria-expanded="true"
       aria-label="Toggle navigation"
     >
-      <span class="navbar-toggler-icon "></span>
+      <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto mt-2 ml-auto my-auto">
-        <li class="nav-item  mr-5 ">
+        <li class="nav-item mr-5">
           <span
             ><a
               class="nav-link"
@@ -68,7 +66,7 @@
               >Tutorials</a
             >
             <a class="dropdown-item" [routerLink]="['/stdmat/papers']"
-              >Previous Year Papers</a
+              >Question Papers</a
             >
           </div>
         </li>
@@ -118,7 +116,7 @@
             ><span><fa-icon [icon]="faBell"></fa-icon></span> Notifications</a
           >
         </li> -->
-        <li class="nav-item mr-5  ">
+        <li class="nav-item mr-5">
           <a
             class="nav-link"
             [routerLink]="['/assigns']"
@@ -127,7 +125,7 @@
             ><span class="fa fa-tasks"></span> Assignments</a
           >
         </li>
-        <li class="nav-item mr-5 " *ngIf="!isLoggedIn">
+        <li class="nav-item mr-5" *ngIf="!isLoggedIn">
           <a
             class="nav-link"
             [routerLink]="['/login']"
@@ -136,8 +134,8 @@
             ><span class="fa fa-user"></span> Log In</a
           >
         </li>
-        <li class="nav-item mr-5 " *ngIf="isLoggedIn">
-          <a class="nav-link " (click)="onLogout()"
+        <li class="nav-item mr-5" *ngIf="isLoggedIn">
+          <a class="nav-link" (click)="onLogout()"
             ><span class="fa fa-user"></span> Logout</a
           >
         </li>

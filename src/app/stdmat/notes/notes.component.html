@@ -1,142 +1,157 @@
 <div class="container-fluid my-5">
   <div class="row align-items-center full">
-    <!-- search and sort -->
-    <div class="col-sm-12 col-md-2 pt-4  " style="min-width: 9rem;">
-      <div class="form-group div-inline has-search px-1 w-sm-50">
-        <span class="fa fa-search form-control-feedback"></span>
-        <input
-          type="text"
-          class="form-control"
-          (input)="searchTerm$.next($event.target.value)"
-          placeholder="Search notes..."
-        />
-      </div>
-      <div class="dropdown div-inline px-1 my-1">
-        <button
-          nz-button
-          nzType="default"
-          nz-popover
-          nzPopoverTitle="Filter by:"
-          [(nzPopoverVisible)]="popVisible"
-          (nzPopoverVisibleChange)="change($event)"
-          nzPopoverTrigger="click"
-          [nzPopoverContent]="contentTemplate"
-        >
-          Filter &nbsp; <i class="fas fa-filter fi"></i>
-        </button>
-        <ng-template #contentTemplate>
-          <div class="conainer">
-            <div class="row">
-              <div class="col font-weight-bold">Branch:</div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <nz-checkbox-group
-                  [(ngModel)]="checkOptionOne"
-                  (ngModelChange)="log(checkOptionOne)"
-                ></nz-checkbox-group>
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col font-weight-bold">Semester:</div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <nz-checkbox-group
-                  [(ngModel)]="checkOptionTwo"
-                  (ngModelChange)="log(checkOptionTwo)"
-                ></nz-checkbox-group>
-              </div>
-              <br />
-            </div>
-            <div class="row">
-              <div class="col d-flex mt-3 justify-content-center">
-                <button nz-button nzType="primary" (click)="submitFilter()" class="mx-auto">
-                  Submit
-                </button>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-
-        <!-- <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-submenu nzTitle="Branch">
-              <ul>
-                <li *ngFor="let branch of branches" nz-menu-item>
-                  <label nz-checkbox [(ngModel)]="checked">{{ branch }}</label>
-                  <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="log(checkOptionsOne)"></nz-checkbox-group>
-                </li>
-              </ul>
-            </li>
-            <li nz-submenu nzTitle="Semester">
-              <ul>
-                <li *ngFor="let sem of sems" nz-menu-item>
-                  <label nz-checkbox [(ngModel)]="checked">{{ sem }}</label>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </nz-dropdown-menu> -->
-      </div>
-
-      <div>
-        <button *ngIf="curUser"
-          nz-button
-          nzType="dashed"
-          class="ml-2 my-1"
-          nzDanger
-          (click)="open()"
-        >
-          Upload
-        </button>
-        <button *ngIf="!curUser"
-        nz-button
-          nzType="dashed"
-          class="ml-2 my-1"
-          nzDanger
-          [routerLink]="['/login']"
-        >
-          Sign in to upload
-        </button>
-      </div>
-    </div>
-
-    <!-- notes -->
-    <div class="col-sm-12 col-md-10 border-left">
-      <div class="row">
-        <div class="col display-4 pt-4 pl-4">
+    <!-- books -->
+    <div class="col border-left">
+      <div class="row mt-3">
+        <div class="col display-4 pt-3 pl-3">
           <span class="nhead">Notes</span>
         </div>
       </div>
-      <div class="row pt-4 pl-3 notessec">
+      <nz-spin
+        class="d-flex justify-content-center mt-5"
+        *ngIf="!isDataLoaded"
+        nzTip="Fetching content..."
+        nzSimple
+        [nzSize]="'large'"
+      ></nz-spin>
+      <div *ngIf="isDataLoaded" class="row">
+        <div class="col ml-1 mt-1">
+          <div class="form-group div-inline mb-0 has-search px-1 w-sm-50">
+            <span class="fa fa-search form-control-feedback"></span>
+            <input
+              type="text"
+              class="form-control"
+              (input)="searchItem($event.target.value)"
+              placeholder="Search notes..."
+            />
+          </div>
+
+          <div class="div-inline px-1 my-1">
+            <button
+              nz-button
+              nzType="default"
+              nz-popover
+              nzPopoverTitle="Filter by:"
+              [(nzPopoverVisible)]="popVisible"
+              nzPopoverTrigger="click"
+              [nzPopoverContent]="contentTemplate"
+            >
+              Filter &nbsp; <i class="fas fa-filter fi"></i>
+            </button>
+            <ng-template #contentTemplate>
+              <div class="conainer">
+                <div class="row">
+                  <div class="col font-weight-bold">Branch:</div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <nz-checkbox-group
+                      [(ngModel)]="checkOptionOne"
+                    ></nz-checkbox-group>
+                  </div>
+                </div>
+                <br />
+                <div class="row">
+                  <div class="col font-weight-bold">Semester:</div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <nz-checkbox-group
+                      [(ngModel)]="checkOptionTwo"
+                    ></nz-checkbox-group>
+                  </div>
+                  <br />
+                </div>
+                <div class="row">
+                  <div class="col d-flex mt-3 justify-content-center">
+                    <button
+                      nz-button
+                      nzType="primary"
+                      (click)="submitFilter()"
+                      class="mx-auto"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="div-inline px-1 my-1">
+            <button
+              *ngIf="curUser"
+              nz-button
+              nzType="dashed"
+              class="ml-2 my-1"
+              nzDanger
+              (click)="open()"
+            >
+              Upload
+            </button>
+            <button
+              *ngIf="!curUser"
+              nz-button
+              nzType="dashed"
+              class="ml-2 my-1"
+              nzDanger
+              [routerLink]="['/login']"
+            >
+              Sign in to upload
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row pl-3 mt-3" *ngIf="searching">
+        <div class="col">
+          <nz-spin nzSimple nzTip="Searching notes..."></nz-spin>
+        </div>
+      </div>
+      <div class="row pl-3 mt-3" *ngIf="filtering">
+        <div class="col">
+          <nz-spin nzSimple nzTip="Filtering notes..."></nz-spin>
+        </div>
+      </div>
+      <div *ngIf="notFound" class="row mt-5">
+        <div class="col">
+          <nz-empty [nzNotFoundContent]="contentTpl"></nz-empty>
+        </div>
+      </div>
+      <ng-template #contentTpl>
+        <span style="color: #ff4d76"> No matches found</span>
+      </ng-template>
+      <div *ngIf="isDataLoaded" class="row pl-3 mt-4 notessec">
         <div *ngFor="let note of notes">
           <div class="col pb-3 px-0 mx-2 cd">
             <a
-              ><div class="card" style="width: 9rem;">
-                <!-- <img
-                  src="https://programmerspoint.in/images/data-structure-course.jpg"
-                  class="card-img-top"
-                  alt="https://programmerspoint.in/images/data-structure-course.jpg"
-                /> -->
+              ><div class="card" style="width: 9rem">
                 <div class="card-body">
-                  <h5 class="card-title w-100" style="min-height : 3rem;">
+                  <h5 class="card-title w-100" style="min-height: 3rem">
                     {{ note.topic }}
                   </h5>
                   <div class="card-text">
                     <div>{{ note.subject }}</div>
                     <hr class="my-1" />
-                    <div class="by" style="min-height : 2rem;">
+                    <div class="by" style="min-height: 2rem">
                       {{ note.branch }} &bull; {{ note.semester }} Sem
                     </div>
                     <button
                       nz-button
                       (click)="getFile(note.filename)"
-                      nzType="default"
+                      nzType="primary"
                       class="mt-2 w-100"
                     >
-                      <i class="fas fa-download mr-1"></i>Download
+                      <i class="fas fa-download mr-1 limit"></i>Download
+                    </button>
+                    <button
+                      nz-button
+                      (click)="deleteFile(note._id)"
+                      nzType="danger"
+                      *ngIf="checkDeletable(note.creator)"
+                      class="mt-2 w-100"
+                    >
+                      <i class="ml-auto far fa-trash-alt"></i>
+                      &nbsp;Delete
                     </button>
                   </div>
                 </div>
@@ -150,6 +165,7 @@
 </div>
 
 <nz-drawer
+  *ngIf="isDataLoaded"
   [nzPlacement]="placement"
   [nzBodyStyle]="{ overflow: 'auto' }"
   [nzMaskClosable]="false"
@@ -187,7 +203,7 @@
               <nz-select
                 name="Branch"
                 formControlName="branch"
-                nzPlaceHolder="Select your branch"
+                nzPlaceHolder="Select branch"
               >
                 <nz-option
                   *ngFor="let branch of branches"
@@ -204,7 +220,7 @@
               <nz-select
                 name="semester"
                 formControlName="semester"
-                nzPlaceHolder="Select Semester"
+                nzPlaceHolder="Select semester"
               >
                 <nz-option
                   *ngFor="let sem of sems"
@@ -226,7 +242,7 @@
               />
               <ng-template #subError let-control>
                 <ng-container *ngIf="control.hasError('required')">
-                  Please input subject name !
+                  Please input subject !
                 </ng-container>
               </ng-template>
             </nz-form-control>
@@ -244,8 +260,8 @@
             Add file
           </button>
           <span
-            *ngIf="submitFileError && !notesForm.get('file').valid"
-            style="color: #ff4d76;"
+            *ngIf="submitFileError && !booksForm.get('file').valid"
+            style="color: #ff4d76"
           >
             Please select a file</span
           >
@@ -267,19 +283,23 @@
               </div>
             </div>
           </div>
+
           <input
             type="file"
-            style="display: none;"
+            style="display: none"
             (change)="onFilePicked($event)"
             #filePicker
           />
         </div>
       </div>
+      <div *ngIf="uploadingStatus" class="row">
+        <div class="col d-flex justify-content-center">
+          <nz-spin nzSimple class="mt-3" nzTip="Uploading Book..."> </nz-spin>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
-      <button nz-button nzType="primary" (click)="onSubmit()">
-        Save
-      </button>
+      <button nz-button nzType="primary" (click)="onSubmit()">Save</button>
     </div>
   </form>
 </nz-drawer>

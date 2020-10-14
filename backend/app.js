@@ -9,6 +9,8 @@ const announceRouter = require("./routes/announce");
 const eventRouter = require("./routes/event");
 const notesRouter = require("./routes/notes");
 const booksRouter = require("./routes/books");
+const tutorialRouter = require('./routes/tutorials');
+const papersRouter = require('./routes/papers');
 
 mongoose
   .connect(
@@ -56,5 +58,7 @@ app.use("/api/announce", announceRouter);
 app.use("/api/event", eventRouter);
 app.use("/api/notes", notesRouter);
 app.use("/api/books", booksRouter);
+app.use('/api/tutorials', tutorialRouter);
+app.use('/api/papers', papersRouter);
 
 module.exports = app;

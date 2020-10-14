@@ -24,7 +24,12 @@ export class AuthService {
   }
 
   isLogged() {
-    return this.isLog;
+    if(this.cUser){
+      console.log('cuser is ');
+      console.log(this.cUser);
+      return true;
+    }
+    return false;
   }
 
   createUser(
@@ -96,14 +101,7 @@ export class AuthService {
 
   setCurUserInfo(): Observable<any> {
     return this.http
-      .get('http://localhost:3000/api/user/getCurUserInfo')
-      .pipe();
-    // .subscribe(user => {
-    //   console.log('geting user info');
-    //   this.cUser = user;
-    //   this.curUser.next(this.cUser);
-    //   console.log(this.cUser);
-    // });
+      .get('http://localhost:3000/api/user/getCurUserInfo');
   }
 
   getCurUser() {
@@ -160,16 +158,18 @@ export class AuthService {
 
   autoAuthUser() {
     const authToken = this.getAuthData();
-    console.log('not auth');
     if (authToken) {
-      console.log('auth set');
       this.atoken = authToken;
-      this.isLog = true;
       this.setCurUserInfo().subscribe(user => {
         this.cUser = user;
+        this.cUser = this.cUser.user;
+        console.log('cUser value is ');
+        console.log(this.cUser);
+        this.curUser.next(this.cUser);
+        this.isLog = true;
+        this.authStatus.next(true);
       });
-      this.curUser.next(this.cUser);
-      this.authStatus.next(true);
+      
     }
   }
 }

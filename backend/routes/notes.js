@@ -184,4 +184,12 @@ router.post("/filter", (req, res, next) => {
   }
 });
 
+router.delete("/:id", checkAuth, (req, res, next) => {
+  console.log("notesId to delete " + req.params.id);
+  Notes.deleteOne({ _id: req.params.id }).then(notes => {
+    console.log("deleted in backend");
+        res.status(201).json({ message: "notes deleted" });
+  });
+});
+
 module.exports = router;

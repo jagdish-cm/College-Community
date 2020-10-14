@@ -110,6 +110,15 @@ import { EventsResolverService } from './home/events/events-resolver.service';
 import { NotesResolverService } from './stdmat/notes/notes-resolver.service';
 import { BooksResolverService } from './stdmat/books/books-resolver.service';
 
+
+import {CalendarModule} from 'primeng/calendar';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {SidebarModule} from 'primeng/sidebar';
+import {TableModule} from 'primeng/table';
+
+
+
 registerLocaleData(en);
 
 const routes: Routes = [
@@ -128,29 +137,24 @@ const routes: Routes = [
 
   {
     path: 'stdmat',
-    resolve: { curUser: CurUserResolveService },
     children: [
       { path: '', component: StdmatComponent },
       { path: 'tutorials', component: TutorialsComponent },
       {
         path: 'notes',
         component: NotesComponent,
-        resolve: {
-          notes: NotesResolverService
-        }
       },
       {
         path: 'books',
         component: BooksComponent,
-        resolve: {
-          books: BooksResolverService
-        }
       },
       { path: 'papers', component: PapersComponent }
     ]
   },
 
-  { path: 'assigns', component: AssignsComponent, canActivate: [AuthGuard] },
+  { path: 'assigns', component: AssignsComponent
+  // , canActivate: [AuthGuard] 
+},
   {
     path: 'edit/:postId',
     component: CreatePostComponent,
@@ -266,7 +270,12 @@ const routes: Routes = [
     NzWaveModule,
     NzResizableModule,
     CKEditorModule,
-    NgFileValidatorLibModule
+    NgFileValidatorLibModule,
+    CalendarModule,
+    DialogModule,
+    ButtonModule,
+    SidebarModule,
+    TableModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

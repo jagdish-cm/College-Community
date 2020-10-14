@@ -49,3 +49,8 @@ a {
 .limit {
   word-wrap: break-word;
 }
+
+.filename {
+  border: 1px solid $grayed-border;
+  border-radius: 2px;
+}

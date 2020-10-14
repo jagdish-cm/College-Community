@@ -8,56 +8,56 @@ import {
   distinctUntilChanged,
   switchMap
 } from 'rxjs/internal/operators';
+import papers from '../../../backend/models/papers';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BooksService {
+export class PapersService {
+
   constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+    private http: HttpClient
+  ) { }
 
-  reloadComponent() {
-    window.location.reload();
-  }
-
-  addBook(
+  addPaper (
     creator: string,
-    title: string,
-    author: string,
+    exam: string,
+    subjects: string,
     branch: string,
     semester: number,
+    sessionFrom : string,
+    sessionTo : string,
     file: File
-  ) : Observable<any> {
-    const book = new FormData();
-    book.append('creator', creator);
-    book.append('title', title);
-    book.append('author', author);
-    book.append('branch', branch);
-    book.append('semester', semester.toString());
-    book.append('date', Date.now().toString());
-    book.append('file', file, file.name);
-    console.log('book service ' + book);
-    book.forEach((value, key) => {
+  ) :Observable<any> {
+    const paper = new FormData();
+    paper.append('creator', creator);
+    paper.append('exam', exam);
+    paper.append('subjects', subjects);
+    paper.append('sessionFrom', sessionFrom);
+    paper.append('sessionTo', sessionTo);
+    paper.append('branch', branch);
+    paper.append('semester', semester.toString());
+    paper.append('date', Date.now().toString());
+    paper.append('file', file, file.name);
+    console.log('paper service ' + paper);
+    paper.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-     return this.http
-      .post<{ book; bid: string }>(
-        'http://localhost:3000/api/books/create',
-        book
+    return this.http
+      .post<{ paper; pid: string }>(
+        'http://localhost:3000/api/papers/create',
+        paper
       );
   }
 
-  getBooks(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/books');
+  getPapers(): Observable<any> {
+    return this.http.get<[]>('http://localhost:3000/api/papers');
   }
 
   getFile(filename: string) {
     let file = { filename: filename };
     this.http
-      .post('http://localhost:3000/api/books/getBook', file, {
+      .post('http://localhost:3000/api/papers/getfile', file, {
         responseType: 'blob'
       })
       .subscribe((response: any) => {
@@ -77,7 +77,7 @@ export class BooksService {
 
   search(terms: Observable<string>) {
     return terms.pipe(
-      debounceTime(400),
+      debounceTime(100),
       distinctUntilChanged(),
       switchMap(term => this.searchEntries(term))
     );
@@ -86,7 +86,7 @@ export class BooksService {
   filterRes(filterItems: object) {
     console.log(filterItems);
     return this.http.post(
-      'http://localhost:3000/api/books/filter',
+      'http://localhost:3000/api/papers/filter',
       filterItems
     );
   }
@@ -94,11 +94,11 @@ export class BooksService {
   searchEntries(term) {
     console.log(term);
     let search = { search: term };
-    return this.http.post('http://localhost:3000/api/books/search', search);
+    return this.http.post('http://localhost:3000/api/papers/search', search);
   }
 
   deleteFile(id: string) : Observable<any> {
     return this.http
-      .delete('http://localhost:3000/api/books/' + id);
+      .delete('http://localhost:3000/api/papers/' + id);
   }
 }

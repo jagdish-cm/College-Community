@@ -1,23 +1,27 @@
 <div class="container-fluid my-5">
   <div class="row align-items-center full">
-    <!-- search and sort -->
-    <div class="col-sm-12 col-md-2 pt-4  " style="min-width: 9rem;"></div>
-
     <!-- books -->
-    <div class="col-sm-12 col-md-10 border-left">
+    <div class="col border-left">
       <div class="row">
         <div class="col display-4 pt-3 pl-3">
           <span class="nhead">Books</span>
         </div>
       </div>
-      <div class="row">
+      <nz-spin
+        class="d-flex justify-content-center mt-5"
+        *ngIf="!isDataLoaded"
+        nzTip="Fetching content..."
+        nzSimple
+        [nzSize]="'large'"
+      ></nz-spin>
+      <div *ngIf="isDataLoaded" class="row">
         <div class="col ml-1 mt-1">
           <div class="form-group div-inline mb-0 has-search px-1 w-sm-50">
             <span class="fa fa-search form-control-feedback"></span>
             <input
               type="text"
               class="form-control"
-              (input)="searchTerm$.next($event.target.value)"
+              (input)="searchItem($event.target.value)"
               placeholder="Search books..."
             />
           </div>
@@ -98,19 +102,37 @@
           </div>
         </div>
       </div>
-      <div class="row pl-3 mt-3 notessec">
+      <div class="row pl-3 mt-3" *ngIf="searching">
+        <div class="col">
+          <nz-spin nzSimple nzTip="Searching books..."></nz-spin>
+        </div>
+      </div>
+      <div class="row pl-3 mt-3" *ngIf="filtering">
+        <div class="col">
+          <nz-spin nzSimple nzTip="Filtering books..."></nz-spin>
+        </div>
+      </div>
+      <div *ngIf="notFound" class="row mt-5">
+        <div class="col">
+          <nz-empty [nzNotFoundContent]="contentTpl"></nz-empty>
+        </div>
+      </div>
+      <ng-template #contentTpl>
+        <span style="color: #ff4d76"> No matches found</span>
+      </ng-template>
+      <div *ngIf="isDataLoaded" class="row pl-3 mt-3 notessec">
         <div *ngFor="let book of books">
           <div class="col pb-3 px-0 mx-2 cd">
             <a
-              ><div class="card" style="width: 9rem;">
+              ><div class="card" style="width: 9rem">
                 <div class="card-body">
-                  <h5 class="card-title w-100" style="min-height : 3rem;">
+                  <h5 class="card-title w-100" style="min-height: 3rem">
                     {{ book.title }}
                   </h5>
                   <div class="card-text">
                     <div>{{ book.author }}</div>
                     <hr class="my-1" />
-                    <div class="by" style="min-height : 2rem;">
+                    <div class="by" style="min-height: 2rem">
                       {{ book.branch }} &bull; {{ book.semester }} Sem
                     </div>
                     <button
@@ -143,6 +165,7 @@
 </div>
 
 <nz-drawer
+  *ngIf="isDataLoaded"
   [nzPlacement]="placement"
   [nzBodyStyle]="{ overflow: 'auto' }"
   [nzMaskClosable]="false"
@@ -238,7 +261,7 @@
           </button>
           <span
             *ngIf="submitFileError && !booksForm.get('file').valid"
-            style="color: #ff4d76;"
+            style="color: #ff4d76"
           >
             Please select a file</span
           >
@@ -260,19 +283,23 @@
               </div>
             </div>
           </div>
+
           <input
             type="file"
-            style="display: none;"
+            style="display: none"
             (change)="onFilePicked($event)"
             #filePicker
           />
         </div>
       </div>
+      <div *ngIf="uploadingStatus" class="row">
+        <div class="col d-flex justify-content-center">
+          <nz-spin nzSimple class="mt-3" nzTip="Uploading Book..."> </nz-spin>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
-      <button nz-button nzType="primary" (click)="onSubmit()">
-        Save
-      </button>
+      <button nz-button nzType="primary" (click)="onSubmit()">Save</button>
     </div>
   </form>
 </nz-drawer>

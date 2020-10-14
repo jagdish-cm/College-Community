@@ -10,9 +10,9 @@ import {
   NzNotificationService,
   NzNotificationPlacement
 } from 'ng-zorro-antd/notification';
-import { ActivatedRoute } from '@angular/router';
 import { NotesService } from '../../services/notes.service';
 import { Subject } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-notes',
@@ -37,41 +37,27 @@ export class NotesComponent implements OnInit {
   popVisible: boolean = false;
   filterTerm$ = new Subject<object>();
   curUserDes: any;
+  isDataLoaded : boolean = false;
+  uploadingStatus : boolean = false;
+  visible = false;
+  notFound : boolean = false ;
+  searching : boolean = false;
+  filtering : boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private notification: NzNotificationService,
-    private route: ActivatedRoute,
-    private notesService: NotesService
+    private notesService: NotesService,
+    private authService : AuthService
   ) {
     this.notesService.search(this.searchTerm$).subscribe(res => {
       this.notes = res;
+      console.log(this.notes.length);
+      if(this.notes.length === 0){
+        this.notFound = true;
+      }
+      this.searching = false;
     });
-  }
-
-  ngOnInit(): void {
-    this.curUser = this.route.snapshot.data.curUser;
-    this.notes = this.route.snapshot.data.notes;
-    this.notes = this.notes.notes;
-    console.log(typeof this.notes[0].date);
-    this.notes = this.notes.sort((a, b) => a.date - b.date);
-    console.log(this.notes);
-    this.notesForm = this.fb.group({
-      creator: ['', Validators.required],
-      topic: ['', Validators.required],
-      subject: ['', Validators.required],
-      branch: ['', Validators.required],
-      semester: ['', Validators.required],
-      file: [null, [Validators.required, this.fileExtValidator]]
-    });
-    if (this.curUser) {
-      this.curUser = this.curUser.user;
-      this.curUserDes = this.curUser.designation;
-      console.log('designation ' + this.curUserDes);
-      this.notesForm.patchValue({ creator: this.curUser._id });
-      this.notesForm.get('creator').updateValueAndValidity();
-    }
-    this.notPlacement = 'bottomLeft';
     this.branches = [
       'Electronics',
       'Computer Science',
@@ -95,12 +81,51 @@ export class NotesComponent implements OnInit {
       a['checked'] = false;
       this.checkOptionTwo.push(a);
     });
+    this.notesService.getNotes().subscribe((result) =>{
+      console.log('in notes observable');
+      this.notes = result.notes;
+      this.isDataLoaded = true;
+    })
+  }
+
+  ngOnInit(): void {
+    this.notesForm = this.fb.group({
+      creator: ['', Validators.required],
+      topic: ['', Validators.required],
+      subject: ['', Validators.required],
+      branch: ['', Validators.required],
+      semester: ['', Validators.required],
+      file: [null, [Validators.required, this.fileExtValidator]]
+    });
+
+    if(this.authService.isLogged() ){
+      console.log('yes logged in')
+      this.curUser = this.authService.getCurUser();
+      console.log(this.curUser);
+      this.curUserDes = this.curUser.designation;
+      console.log('designation ' + this.curUserDes);
+    }
+
+    this.authService.distributeCurUserInfo().subscribe((result) =>{
+      console.log('disti logged in');
+      this.curUser = result;
+      console.log(this.curUser);
+      this.curUserDes = this.curUser.designation;
+      this.notesForm.patchValue({ creator: this.curUser._id });
+        this.notesForm.get('creator').updateValueAndValidity();
+    })
+
+    if(this.isDataLoaded){
+      console.log(typeof this.notes[0].date);
+      this.notes = this.notes.sort((a, b) => a.date - b.date);
+      console.log(this.notes);
+      this.notPlacement = 'bottomLeft';
+    }
   }
 
   printCh(a: string) {
     console.log(a);
   }
-  visible = false;
 
   onFilePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
@@ -114,6 +139,21 @@ export class NotesComponent implements OnInit {
     if (this.notesForm.controls.file.status === 'INVALID') {
       this.createBasicNotification('bottomLeft');
     }
+  }
+
+  checkDeletable(notesCreator: string) {
+    if (!this.curUser) {
+      return false;
+    }
+    if (notesCreator === this.curUser._id) {
+      return true;
+    }
+  }
+
+  searchItem(search : string){
+    this.notFound = false;
+    this.searching = true;
+    this.searchTerm$.next(search);
   }
 
   fileExtValidator: ValidatorFn = (
@@ -141,15 +181,6 @@ export class NotesComponent implements OnInit {
       return { fileInvalid: true };
     }
   };
-
-  checkDeletable(bookCreator : string){
-    if(!this.curUser){
-      return false; 
-    }
-    if(bookCreator === this.curUser._id){
-      return true;
-    }
-  }
 
   createBasicNotification(position: NzNotificationPlacement): void {
     this.notification.blank(
@@ -187,6 +218,7 @@ export class NotesComponent implements OnInit {
     if (this.notesForm.controls.file.status === 'INVALID') {
       this.submitFileError = true;
     } else if (this.notesForm.status === 'VALID') {
+      this.uploadingStatus = true;
       this.notesService.addNotes(
         this.notesForm.value.creator,
         this.notesForm.value.topic,
@@ -194,7 +226,12 @@ export class NotesComponent implements OnInit {
         this.notesForm.value.branch,
         this.notesForm.value.semester,
         this.notesForm.value.file
-      );
+      ).subscribe((result) =>{
+        this.uploadingStatus = false;
+        this.close();
+        console.log(result);
+        this.notes.push(result);
+      });
     }
   }
 
@@ -208,7 +245,9 @@ export class NotesComponent implements OnInit {
   }
 
   submitFilter(): void {
+    this.notFound = false;
     this.popVisible = false;
+    this.filtering = true;
     let branchFilters = [];
     let semFilters = [];
     this.checkOptionOne.forEach(element => {
@@ -232,10 +271,23 @@ export class NotesComponent implements OnInit {
     this.notesService.filterRes(filterItems).subscribe(res => {
       console.log(res);
       this.notes = res;
+      if(this.notes.length === 0){
+        this.notFound = true;
+      }
+      this.filtering = false;
     });
   }
 
   change(value: boolean): void {
     console.log(value);
+  }
+
+  deleteFile(id: string) {
+    this.notesService.deleteFile(id).subscribe((result) =>{
+      console.log(result);
+      this.notes = this.notes.filter((book) =>{
+        return book._id !== id;
+      })
+    });
   }
 }

@@ -14,23 +14,17 @@ import {
 })
 export class NotesService {
   constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-    private router: Router
+    private http: HttpClient
   ) {}
 
-  reloadComponent() {
-    window.location.reload();
-  }
-
-  addNotes(
+  addNotes (
     creator: string,
     topic: string,
     subject: string,
     branch: string,
     semester: number,
     file: File
-  ) {
+  ) :Observable<any> {
     const notes = new FormData();
     notes.append('creator', creator);
     notes.append('topic', topic);
@@ -43,14 +37,11 @@ export class NotesService {
     notes.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-    this.http
+    return this.http
       .post<{ notes; nid: string }>(
         'http://localhost:3000/api/notes/create',
         notes
-      )
-      .subscribe(resdata => {
-        this.reloadComponent();
-      });
+      );
   }
 
   getNotes(): Observable<any> {
@@ -80,18 +71,13 @@ export class NotesService {
 
   search(terms: Observable<string>) {
     return terms.pipe(
-      debounceTime(400),
+      debounceTime(100),
       distinctUntilChanged(),
       switchMap(term => this.searchEntries(term))
     );
   }
 
   filterRes(filterItems: object) {
-    // let s;
-    // filterItems.subscribe(result => {
-    //   console.log(result);
-    //   s = result;
-    // });
     console.log(filterItems);
     return this.http.post(
       'http://localhost:3000/api/notes/filter',
@@ -103,5 +89,10 @@ export class NotesService {
     console.log(term);
     let search = { search: term };
     return this.http.post('http://localhost:3000/api/notes/search', search);
+  }
+
+  deleteFile(id: string) : Observable<any> {
+    return this.http
+      .delete('http://localhost:3000/api/notes/' + id);
   }
 }

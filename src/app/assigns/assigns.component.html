@@ -1,32 +1,18 @@
-<div class="container ">
-  <div class="row">
-    <div class="col">
-      <div class="table-operations">
-        <!-- <button nz-button (click)="sortByDateAssigned()">Sort by date assigned</button>
-        <button nz-button (click)="sortByDateSubmission()">Sort by date of submission</button>          Clear filters and sorters
-        </button> -->
-      </div>
-      <nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed">
-        <thead>
-          <tr>
-            <th
-              *ngFor="let column of listOfColumn"
-              [nzSortFn]="column.compare"
-              [nzSortPriority]="column.priority"
-            >
-              {{ column.name }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of filterTable.data">
-            <td>{{ data.title }}</td>
-            <td>{{ data.subject }}</td>
-            <td>{{ data.dateasgn | date: "d MMM" }}</td>
-            <td>{{ data.datesub | date: "d MMM" }}</td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </div>
-  </div>
-</div>
+<p-table [value]="products">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Quantity</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{ product.code }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.quantity }}</td>
+    </tr>
+  </ng-template>
+</p-table>
