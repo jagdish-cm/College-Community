@@ -1,18 +1,34 @@
-<p-table [value]="products">
+<p-table
+  [value]="products"
+  [lazy]="true"
+  (onLazyLoad)="loadCustomers($event)"
+  [paginator]="true"
+  [rows]="10"
+  [totalRecords]="totalRecords"
+  [loading]="loading"
+>
   <ng-template pTemplate="header">
     <tr>
-      <th>Code</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Quantity</th>
+      <th pSortableColumn="title">
+        Title <p-sortIcon field="title"></p-sortIcon>
+      </th>
+      <th pSortableColumn="subject">
+        Subject <p-sortIcon field="subject"></p-sortIcon>
+      </th>
+      <th pSortableColumn="dateasgn">
+        Date Assigned <p-sortIcon field="dateasgn"></p-sortIcon>
+      </th>
+      <th pSortableColumn="datesub">
+        Last Submission Date <p-sortIcon field="datesub"></p-sortIcon>
+      </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
     <tr>
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.quantity }}</td>
+      <td>{{ product.title }}</td>
+      <td>{{ product.subject }}</td>
+      <td>{{ product.dateasgn }}</td>
+      <td>{{ product.datesub }}</td>
     </tr>
   </ng-template>
 </p-table>
