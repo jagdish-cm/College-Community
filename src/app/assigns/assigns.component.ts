@@ -15,27 +15,39 @@ import { Product } from './product';
   styleUrls: ['./assigns.component.scss']
 })
 export class AssignsComponent implements OnInit {
-    products: Product[];
+  products: Product[];
+  loading: boolean;
+  datasource: Product[];
+  totalRecords: number;
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {}
 
   ngOnInit() {
-    this.productService.getProductsSmall().then(data => this.products = data);
-    };
+    this.productService.getProductsSmall().then(data => {
+      this.products = data;
+    });
+  }
 
-    
+  // loadCustomers(event: LazyLoadEvent) {
 
+  //   //in a real application, make a remote request to load data using state metadata from event
+  //   //event.first = First row offset
+  //   //event.rows = Number of rows per page
+  //   //event.sortField = Field name to sort with
+  //   //event.sortOrder = Sort order as number, 1 for asc and -1 for dec
+  //   //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
 
-
-
-
-
-
-
-
-
-
-
+  //   //imitate db connection over a network
+  //   setTimeout(() => {
+  //     if (this.datasource) {
+  //       this.products = this.datasource.slice(
+  //         event.first,
+  //         event.first + event.rows
+  //       );
+  //       this.loading = false;
+  //     }
+  //   }, 1000);
+  // }
 
   // listOfColumn = [
   //   {
