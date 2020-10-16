@@ -1,11 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Post } from '../../../../models/post.model';
 import { PostService } from '../../../../services/post.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription } from 'rxjs';
-import { CurUser } from '../../../../models/curuser.model';
-import { ActivatedRoute } from '@angular/router';
+// import { ActivatedRoute } from '@angular/router';
 import { FileCheck } from 'angular-file-validator';
 import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
@@ -41,29 +39,51 @@ export class OnepostComponent implements OnInit {
     private postService: PostService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private route: ActivatedRoute
+    // private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.pst = this.post;
-    this.isLoggedIn = this.authService.isLogged();
-    this.authStatus = this.authService.authSubsListner().subscribe(result => {
-      this.isLoggedIn = result;
+
+    if(this.authService.isLogged() ){
+      this.curUser = this.authService.getCurUser();
+      this.setAuthForPost(); 
+    }
+
+    this.authService.distributeCurUserInfo().subscribe((result) =>{
+      this.curUser = result;
+      console.log('one post distribute');
       this.setAuthForPost();
-    });
-    this.setAuthForPost();
+    })
+
+    this.authService.authStatus.subscribe((isLoggedIn) =>{
+      console.log('one post auth status');
+      if(isLoggedIn === false){
+        this.curUser = null;
+        this.authorizedToEditPost = false;
+      }
+      else if(isLoggedIn == true){
+        this.curUser = this.authService.getCurUser();
+        this.setAuthForPost(); 
+      }
+    })
+
+
+
+    // this.isLoggedIn = this.authService.isLogged();
+    // this.authStatus = this.authService.authSubsListner().subscribe(result => {
+    //   this.isLoggedIn = result;
+    //   this.setAuthForPost();
+    // });
+    // this.setAuthForPost();
     // this.postUser = this.route.snapshot.data.postUser;
   }
 
   setAuthForPost() {
-    console.log('in one post comp');
-    if (this.isLoggedIn) {
-      this.setUser();
-
+    // console.log('in one post comp'); 
       if (this.curUser._id === this.post.creator) {
         this.authorizedToEditPost = true;
       }
-    }
   }
 
   onDelete(postId: string): void {
@@ -155,10 +175,6 @@ export class OnepostComponent implements OnInit {
     ]
   };
 
-  setUser() {
-    this.curUser = this.authService.getCurUser();
-    this.curUser = this.curUser.user;
-  }
 
   onSubmit(): void {
     this.postTime = Date.now();

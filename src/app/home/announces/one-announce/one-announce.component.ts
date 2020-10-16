@@ -21,8 +21,6 @@ export class OneAnnounceComponent implements OnInit {
 
   ngOnInit(): void {
     this.announcement = this.announce;
-    console.log('here announce');
-    console.log(this.announce);
   }
 
   clickMe(): void {

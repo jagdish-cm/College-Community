@@ -53,6 +53,7 @@ export class PostService {
         newpost
       )
       .subscribe(resdata => {
+        console.log('post created');
         this.reloadComponent();
       });
   }

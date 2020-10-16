@@ -12,23 +12,24 @@ export class AuthService {
   private atoken: string;
   private curUser = new Subject<CurUser>();
   private cUser;
-  private authStatus = new Subject<boolean>();
+  public authStatus = new Subject<boolean>();
   private isLog: boolean = false;
 
   getToken() {
     return this.atoken;
   }
 
-  authSubsListner() {
+  authSubsListner() : Observable<boolean> {
     return this.authStatus.asObservable();
   }
 
   isLogged() {
+    console.log('isLogged called and returned ');
     if(this.cUser){
-      console.log('cuser is ');
-      console.log(this.cUser);
+      console.log('true');
       return true;
     }
+    console.log('false');
     return false;
   }
 
@@ -119,10 +120,12 @@ export class AuthService {
           this.isLog = true;
           this.authStatus.next(true);
           this.setCurUserInfo().subscribe(user => {
-            this.cUser = user;
+            this.cUser = user.user;
+            console.log('cuser from auth '+  this.cUser.name)
             this.curUser.next(this.cUser);
             this.saveAuthData(token);
-            this.router.navigate(['/']);
+            // this.router.navigate(['/']);
+            console.log('logged in successfully');
           });
         }
       });
@@ -163,8 +166,8 @@ export class AuthService {
       this.setCurUserInfo().subscribe(user => {
         this.cUser = user;
         this.cUser = this.cUser.user;
-        console.log('cUser value is ');
-        console.log(this.cUser);
+        // console.log('cUser value is ');
+        // console.log(this.cUser);
         this.curUser.next(this.cUser);
         this.isLog = true;
         this.authStatus.next(true);

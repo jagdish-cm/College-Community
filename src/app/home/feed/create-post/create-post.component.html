@@ -1,18 +1,23 @@
 <!-- Button trigger modal -->
 
-<div class="conatiner post mb-4 cp pb-1 w-100">
+<div class="conatiner post mb-4 cp pb-1 w-100" *ngIf="curUserAvailable">
   <div class="row py-1" data-toggle="modal" data-target="#exampleModal">
     <div class="col-2">
       <span class="fa fa-edit d-flex pt-3 justify-content-end"></span>
     </div>
-    <div class="col-10 ">
+    <div class="col-10">
       <input type="text" class="py-3" placeholder="Show your skills here..." />
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1">
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  *ngIf="curUserAvailable"
+>
   <div class="modal-dialog mt-5" role="document">
     <div class="modal-content">
       <form [formGroup]="createdPost" (ngSubmit)="onSubmit()">

@@ -99,11 +99,10 @@ export class NotesComponent implements OnInit {
     });
 
     if(this.authService.isLogged() ){
-      console.log('yes logged in')
       this.curUser = this.authService.getCurUser();
-      console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
-      console.log('designation ' + this.curUserDes);
+      this.notesForm.patchValue({ creator: this.curUser._id });
+        this.notesForm.get('creator').updateValueAndValidity();
     }
 
     this.authService.distributeCurUserInfo().subscribe((result) =>{

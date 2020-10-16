@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,9 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class EventService {
   constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-    private router: Router
+    private http: HttpClient
   ) {}
 
   reloadComponent() {
@@ -25,7 +21,7 @@ export class EventService {
     dates: Date[],
     time: any,
     files: File[]
-  ) {
+  ) :Observable<any> {
     const event = new FormData();
     event.append('creator', creator);
     event.append('title', title);
@@ -47,14 +43,11 @@ export class EventService {
     event.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-    this.http
+    return this.http
       .post<{ event; eid: string }>(
         'http://localhost:3000/api/event/create',
         event
-      )
-      .subscribe(resdata => {
-        this.reloadComponent();
-      });
+      );
   }
 
   getEvents(): Observable<any> {

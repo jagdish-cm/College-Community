@@ -126,13 +126,13 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    resolve: {
-      posts: PostsResolverService,
-      curUser: CurUserResolveService,
-      announces: AnnouncesResolverService,
-      events: EventsResolverService
-      // postUser: PostUserResolverService
-    }
+    // resolve: {
+    //   posts: PostsResolverService,
+    //   curUser: CurUserResolveService,
+    //   announces: AnnouncesResolverService,
+    //   events: EventsResolverService
+    //   // postUser: PostUserResolverService
+    // }
   },
 
   {

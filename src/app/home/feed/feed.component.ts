@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-feed',
@@ -7,14 +6,14 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-  isLoggedIn: boolean = false;
-  constructor(private authService: AuthService) {}
+  // isLoggedIn: boolean = false;
+  constructor() {}
 
   ngOnInit(): void {
-    console.log('in feed comp');
-    this.isLoggedIn = this.authService.isLogged();
-    this.authService.authSubsListner().subscribe(isAuthenticated => {
-      this.isLoggedIn = isAuthenticated;
-    });
+    // console.log('in feed comp');
+    // this.isLoggedIn = this.authService.isLogged();
+    // this.authService.authSubsListner().subscribe(isAuthenticated => {
+    //   this.isLoggedIn = isAuthenticated;
+    // });
   }
 }

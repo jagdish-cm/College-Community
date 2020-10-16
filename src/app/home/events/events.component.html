@@ -9,7 +9,7 @@
           Events
         </div>
         <button
-          *ngIf="curUserDes === 'Faculty'"
+          *ngIf="curUser && curUserDes === 'Faculty'"
           nz-button
           nzType="primary"
           (click)="open()"
@@ -121,7 +121,7 @@
       <hr class="my-0" />
       <!-- announcements -->
       <div class="row pb-0">
-        <div class="col px-0 pt-2">
+        <div class="col px-0 pt-2" *ngIf="isDataLoaded">
           <!-- one announcemet -->
           <div *ngFor="let event of events">
             <app-one-event [event]="event"></app-one-event>

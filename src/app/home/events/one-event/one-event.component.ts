@@ -17,8 +17,6 @@ export class OneEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.newEvent = this.event;
-    console.log('here event');
-    console.log(this.event);
   }
 
   change(value: boolean): void {

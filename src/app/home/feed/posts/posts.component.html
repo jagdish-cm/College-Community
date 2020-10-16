@@ -1,6 +1,6 @@
 <div class="container-fluid mt-4">
   <div
-    *ngIf="isLoading"
+    *ngIf="!isDataLoaded"
     class="d-flex align-items-center justify-content-center"
   >
     <nz-spin
@@ -10,8 +10,10 @@
     ></nz-spin>
   </div>
 
-  <div *ngFor="let post of posts">
-    <!-- one post -->
-    <app-onepost [post]="post" *ngIf="!isLoading"></app-onepost>
+  <div *ngIf="isDataLoaded">
+    <div *ngFor="let post of posts">
+      <!-- one post -->
+      <app-onepost [post]="post" *ngIf="!isLoading"></app-onepost>
+    </div>
   </div>
 </div>

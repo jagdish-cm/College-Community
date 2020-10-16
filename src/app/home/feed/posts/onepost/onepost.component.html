@@ -1,11 +1,11 @@
-<div class="row post mt-2 ">
+<div class="row post mt-2">
   <div class="col pt-3 pb-1">
     <!-- post head -->
-    <div class="row ">
-      <div class=" col-sm-4 col-md-2 col-lg-1 mx-4 ">
+    <div class="row">
+      <div class="col-sm-4 col-md-2 col-lg-1 mx-4">
         <img src="{{ post.profileimg }}" class="ppic" alt="" />
       </div>
-      <div class=" col-sm-4 col-md-9 col-lg-9 ">
+      <div class="col-sm-4 col-md-9 col-lg-9">
         <div class="row font-weight-bolder username">
           <div class="col px-0">{{ post.username }}</div>
         </div>
@@ -16,7 +16,7 @@
           <div class="col px-0">{{ post.time | date: "d MMM, h:m aa" }}</div>
         </div>
       </div>
-      <div class=" col-sm-4 col-md-1 col-lg-1 ">
+      <div class="col-sm-4 col-md-1 col-lg-1">
         <span
           nz-popover
           [(nzPopoverVisible)]="visible"
@@ -28,7 +28,7 @@
           <a class="fa fa-ellipsis-h d-flex justify-content-end tdot"></a>
         </span>
         <ng-template #contentTemplate>
-          <a (click)="onDelete(post._id)" *ngIf="post.creator == curUser._id"
+          <a (click)="onDelete(post._id)" *ngIf="authorizedToEditPost"
             >Delete</a
           >
           <hr />
@@ -38,7 +38,7 @@
             data-toggle="modal"
             data-target="#editModal"
             (click)="onEdit(post.id)"
-            *ngIf="post.creator == curUser._id"
+            *ngIf="authorizedToEditPost"
             >Edit</a
           >
         </ng-template>
@@ -46,7 +46,7 @@
     </div>
     <!-- post data -->
     <div class="row pt-3">
-      <div class="col postdata  mx-4" [innerHtml]="post.postContent"></div>
+      <div class="col postdata mx-4" [innerHtml]="post.postContent"></div>
     </div>
     <div *ngIf="post.imagePath" class="row">
       <div class="col">
@@ -61,10 +61,10 @@
           <div class="col-4 lcounts">
             <i nz-icon nzType="fire" nzTheme="outline" class="pt-0"></i>
             <!-- <span class="far fa-heart"></span> -->
-            <span class="pl-2 ">{{ post.lcounts }}</span>
+            <span class="pl-2">{{ post.lcounts }}</span>
           </div>
           <div class="col-4" class="mx-auto">{{ post.comcounts }} Comments</div>
-          <div class="col-4 d-flex justify-content-end ">
+          <div class="col-4 d-flex justify-content-end">
             <span class="fa fa-comment-alt"></span>
             <span class="pl-2 mb-2" (click)="addnewComment()">
               Add comment
