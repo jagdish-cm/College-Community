@@ -116,6 +116,9 @@ import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
 import {TableModule} from 'primeng/table';
+import {InputTextModule} from 'primeng/inputtext';
+import {EditorModule} from 'primeng/editor';
+import {DropdownModule} from 'primeng/dropdown';
 
 
 
@@ -275,7 +278,10 @@ const routes: Routes = [
     DialogModule,
     ButtonModule,
     SidebarModule,
-    TableModule
+    TableModule,
+    InputTextModule,
+    EditorModule,
+    DropdownModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
