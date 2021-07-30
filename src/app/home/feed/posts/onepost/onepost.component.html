@@ -59,9 +59,9 @@
       <div class="col mx-4 likes">
         <div class="row">
           <div class="col-4 lcounts">
-            <i nz-icon nzType="fire" nzTheme="outline" class="pt-0"></i>
+            <i (click)="likePost()" nz-icon nzType="fire" nzTheme="outline" class="pt-0"></i>
             <!-- <span class="far fa-heart"></span> -->
-            <span class="pl-2">{{ post.lcounts }}</span>
+            <span (click)="likePost()" class="pl-2">{{ post.lcounts }}</span>
           </div>
           <div class="col-4" class="mx-auto">{{ post.comcounts }} Comments</div>
           <div class="col-4 d-flex justify-content-end">

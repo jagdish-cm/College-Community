@@ -1,8 +1,6 @@
 <div class="container-fluid">
   <div class="row my-3">
-    <div class="col display-4 d-flex justify-content-center">
-      Register
-    </div>
+    <div class="col display-4 d-flex justify-content-center">Register</div>
   </div>
   <div class="row">
     <div class="col d-flex justify-content-center">
@@ -24,13 +22,17 @@
                       >
                         <img
                           [src]="imagePreview"
-                          style="height: 10rem; width: 10rem; margin-bottom: 2rem;"
+                          style="
+                            height: 10rem;
+                            width: 10rem;
+                            margin-bottom: 2rem;
+                          "
                           alt="post images"
                         />
                       </div>
                       <img
                         src="https://nanuntio.com/wp-content/uploads/2020/03/service_default_avatar_182956.png"
-                        style="height: 10rem; width: 10rem; margin-bottom: 2rem;"
+                        style="height: 10rem; width: 10rem; margin-bottom: 2rem"
                         class="d-flex"
                         *ngIf="!imagePreview"
                         alt=""
@@ -44,7 +46,7 @@
                       </button>
                       <input
                         #propicselect
-                        style="display: none;"
+                        style="display: none"
                         (change)="onImageSelected($event)"
                         type="file"
                       />
@@ -55,7 +57,7 @@
                           <div class="col-2">
                             <nz-form-label nzRequired>Batch</nz-form-label>
                           </div>
-                          <div class="col-10  d-flex justify-content-end">
+                          <div class="col-10 d-flex justify-content-end">
                             <nz-form-control [nzXs]="24">
                               <nz-year-picker
                                 formControlName="batchFrom"
@@ -137,34 +139,25 @@
                             nzPlaceHolder="Select your branch"
                           >
                             <nz-option
-                              nzValue="Computer Science"
-                              nzLabel="Computer Science"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Electronics"
-                              nzLabel="Electronics"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Electrical"
-                              nzLabel="Electrical"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Civil"
-                              nzLabel="Civil"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Agriculture"
-                              nzLabel="Agriculture"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Mining"
-                              nzLabel="Mining"
-                            ></nz-option>
-                            <nz-option
-                              nzValue="Mechanical"
-                              nzLabel="Mechanical"
+                              *ngFor="let branch of branches"
+                              nzValue="{{ branch.value }}"
+                              nzLabel="{{ branch.label }}"
                             ></nz-option>
                           </nz-select>
+                        </nz-form-control>
+                      </nz-form-item>
+
+                      <nz-form-item>
+                        <nz-form-label [nzSpan]="7" nzRequired
+                          >Semester</nz-form-label
+                        >
+                        <nz-form-control [nzSpan]="12" nzHasFeedback>
+                          <input
+                            type="number"
+                            nz-input
+                            formControlName="semester"
+                            placeholder="Semester"
+                          />
                         </nz-form-control>
                       </nz-form-item>
 
@@ -260,13 +253,17 @@
                       >
                         <img
                           [src]="facimagePreview"
-                          style="height: 10rem; width: 10rem; margin-bottom: 2rem;"
+                          style="
+                            height: 10rem;
+                            width: 10rem;
+                            margin-bottom: 2rem;
+                          "
                           alt="post images"
                         />
                       </div>
                       <img
                         src="https://nanuntio.com/wp-content/uploads/2020/03/service_default_avatar_182956.png"
-                        style="height: 10rem; width: 10rem; margin-bottom: 2rem;"
+                        style="height: 10rem; width: 10rem; margin-bottom: 2rem"
                         class="d-flex"
                         *ngIf="!facimagePreview"
                         alt=""
@@ -280,7 +277,7 @@
                       </button>
                       <input
                         #facpropicselect
-                        style="display: none;"
+                        style="display: none"
                         (change)="onfacImageSelected($event)"
                         type="file"
                       />

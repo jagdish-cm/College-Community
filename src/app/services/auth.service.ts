@@ -5,7 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
@@ -19,17 +19,17 @@ export class AuthService {
     return this.atoken;
   }
 
-  authSubsListner() : Observable<boolean> {
+  authSubsListner(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
 
   isLogged() {
-    console.log('isLogged called and returned ');
-    if(this.cUser){
-      console.log('true');
+    // console.log('isLogged called and returned ');
+    if (this.cUser) {
+      // console.log('true');
       return true;
     }
-    console.log('false');
+    // console.log('false');
     return false;
   }
 
@@ -42,7 +42,8 @@ export class AuthService {
     email: string,
     branch: string,
     password: string,
-    profilepic: File
+    profilepic: File,
+    semester: Number
   ) {
     const regUser = new FormData();
     regUser.append('batchFrom', batchFrom.toString());
@@ -55,6 +56,7 @@ export class AuthService {
     regUser.append('mobile', mobile);
     regUser.append('email', email);
     regUser.append('branch', branch);
+    regUser.append('semester', JSON.stringify(semester));
     regUser.append('password', password);
     if (profilepic) {
       regUser.append('profilepic', profilepic, enrolNo + Date.now());
@@ -64,7 +66,7 @@ export class AuthService {
 
     this.http
       .post('http://localhost:3000/api/user/signup', regUser)
-      .subscribe(result => {
+      .subscribe((result) => {
         console.log(result);
         this.router.navigate(['/login']);
       });
@@ -94,15 +96,14 @@ export class AuthService {
 
     this.http
       .post('http://localhost:3000/api/user/signupfac', regUser)
-      .subscribe(result => {
+      .subscribe((result) => {
         console.log(result);
         this.router.navigate(['/login']);
       });
   }
 
   setCurUserInfo(): Observable<any> {
-    return this.http
-      .get('http://localhost:3000/api/user/getCurUserInfo');
+    return this.http.get('http://localhost:3000/api/user/getCurUserInfo');
   }
 
   getCurUser() {
@@ -113,19 +114,20 @@ export class AuthService {
     const user = { email: email, password: password };
     this.http
       .post<{ token: string }>('http://localhost:3000/api/user/login', user)
-      .subscribe(result => {
+      .subscribe((result) => {
         const token = result.token;
         this.atoken = token;
         if (this.atoken) {
           this.isLog = true;
           this.authStatus.next(true);
-          this.setCurUserInfo().subscribe(user => {
+          this.setCurUserInfo().subscribe((user) => {
             this.cUser = user.user;
-            console.log('cuser from auth '+  this.cUser.name)
+            console.log('cuser from auth ' + this.cUser.name);
             this.curUser.next(this.cUser);
             this.saveAuthData(token);
             // this.router.navigate(['/']);
             console.log('logged in successfully');
+            this.router.navigateByUrl('/');
           });
         }
       });
@@ -163,7 +165,7 @@ export class AuthService {
     const authToken = this.getAuthData();
     if (authToken) {
       this.atoken = authToken;
-      this.setCurUserInfo().subscribe(user => {
+      this.setCurUserInfo().subscribe((user) => {
         this.cUser = user;
         this.cUser = this.cUser.user;
         // console.log('cUser value is ');
@@ -172,7 +174,6 @@ export class AuthService {
         this.isLog = true;
         this.authStatus.next(true);
       });
-      
     }
   }
 }

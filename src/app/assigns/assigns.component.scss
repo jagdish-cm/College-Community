@@ -17,3 +17,23 @@
     top: 99px;
   }
 }
+
+.pending {
+  background-color: #ff000038;
+  cursor: pointer;
+  color: #ab0000;
+}
+
+.completed {
+  background-color: #00ff0054;
+  color: green;
+  cursor: pointer;
+}
+
+.tableButton ::ng-deep .p-button {
+  height: 34px;
+}
+
+::ng-deep .p-dialog {
+  width: 75%;
+}

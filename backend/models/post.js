@@ -12,8 +12,9 @@ const postSchema = mongoose.Schema({
   time: String,
   lcounts: Number,
   postContent: String,
+  likedBy : Array,
   //   comments: Comment[],
-  comcounts: Number,
+  // comcounts: Number,
   imagePath: String
 });
 

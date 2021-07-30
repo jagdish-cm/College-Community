@@ -4,18 +4,19 @@ import {
   FormGroup,
   Validators,
   FormControl,
-  ValidationErrors
+  ValidationErrors,
 } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import { CurUser } from '../../models/curuser.model';
 import { CurUserService } from '../../services/cur-user.service';
 import { AuthService } from '../../services/auth.service';
 import { FileCheck } from 'angular-file-validator'; // <-------
+import { UtilitiesService } from 'src/app/services/utilities.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
   regForm: FormGroup;
@@ -23,10 +24,16 @@ export class RegisterComponent {
   cuser: CurUser;
   imagePreview: string;
   facimagePreview: string;
+  branches = [];
 
   isLoading: boolean = false;
 
-  constructor(public authUser: AuthService, private fb: FormBuilder) {
+  constructor(
+    private utilService: UtilitiesService,
+    public authUser: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.branches = utilService.getBranches();
     this.regForm = this.fb.group({
       batchFrom: ['', [Validators.required]],
       batchTo: ['', [Validators.required]],
@@ -34,10 +41,11 @@ export class RegisterComponent {
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      branch: ['ECE', [Validators.required]],
+      branch: ['', [Validators.required]],
+      semester: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirm: ['', [this.confirmValidator]],
-      profilepic: ['', , FileCheck.ngFileValidator(['png', 'jpg', 'jpeg'])]
+      profilepic: ['', , FileCheck.ngFileValidator(['png', 'jpg', 'jpeg'])],
     });
 
     this.facregForm = this.fb.group({
@@ -48,7 +56,7 @@ export class RegisterComponent {
       branch: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirm: ['', [this.confirmfacValidator]],
-      profilepic: ['', , FileCheck.ngFileValidator(['png', 'jpg', 'jpeg'])]
+      profilepic: ['', , FileCheck.ngFileValidator(['png', 'jpg', 'jpeg'])],
     });
   }
 
@@ -86,7 +94,8 @@ export class RegisterComponent {
       email: this.regForm.value.email,
       branch: this.regForm.value.branch,
       password: this.regForm.value.password,
-      profilepic: this.regForm.value.profilepic
+      semester: this.regForm.value.semester,
+      profilepic: this.regForm.value.profilepic,
     };
     console.log(newUser);
 
@@ -99,7 +108,8 @@ export class RegisterComponent {
       newUser.email,
       newUser.branch,
       newUser.password,
-      newUser.profilepic
+      newUser.profilepic,
+      newUser.semester
     );
   }
 
@@ -113,7 +123,7 @@ export class RegisterComponent {
       email: this.facregForm.value.email,
       branch: this.facregForm.value.branch,
       password: this.facregForm.value.password,
-      profilepic: this.facregForm.value.profilepic
+      profilepic: this.facregForm.value.profilepic,
     };
     console.log(newfacUser);
 

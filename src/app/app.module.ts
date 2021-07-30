@@ -103,24 +103,19 @@ import { AuthGuard } from './services/auth.guard';
 import { PostsResolverService } from './home/feed/posts/posts-resolver.service';
 import { PostUserResolverService } from './home/feed/posts/onepost/post-user-resolver.service';
 import { CurUserResolveService } from './services/cur-user-resolve.service';
-import { AnnouncesResolverService } from './home/announces/announces-resolver.service';
 import { OneAnnounceComponent } from './home/announces/one-announce/one-announce.component';
 import { OneEventComponent } from './home/events/one-event/one-event.component';
-import { EventsResolverService } from './home/events/events-resolver.service';
-import { NotesResolverService } from './stdmat/notes/notes-resolver.service';
-import { BooksResolverService } from './stdmat/books/books-resolver.service';
 
-
-import {CalendarModule} from 'primeng/calendar';
-import {DialogModule} from 'primeng/dialog';
-import {ButtonModule} from 'primeng/button';
-import {SidebarModule} from 'primeng/sidebar';
-import {TableModule} from 'primeng/table';
-import {InputTextModule} from 'primeng/inputtext';
-import {EditorModule} from 'primeng/editor';
-import {DropdownModule} from 'primeng/dropdown';
-
-
+import { CalendarModule } from 'primeng/calendar';
+import { FileUploadModule } from 'primeng/fileupload';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { SidebarModule } from 'primeng/sidebar';
+import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { EditorModule } from 'primeng/editor';
+import { DropdownModule } from 'primeng/dropdown';
+import { CreateAsgnComponent } from './assigns/create-asgn/create-asgn.component';
 
 registerLocaleData(en);
 
@@ -151,27 +146,31 @@ const routes: Routes = [
         path: 'books',
         component: BooksComponent,
       },
-      { path: 'papers', component: PapersComponent }
-    ]
+      { path: 'papers', component: PapersComponent },
+    ],
   },
 
-  { path: 'assigns', component: AssignsComponent
-  // , canActivate: [AuthGuard] 
-},
+  {
+    path: 'assigns',
+    children: [
+      { path: '', component: AssignsComponent },
+      { path: 'createAsgn', component: CreateAsgnComponent },
+    ],
+  },
   {
     path: 'edit/:postId',
     component: CreatePostComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
     children: [
       { path: '', component: LoginComponent },
-      { path: 'reg', component: RegisterComponent }
-    ]
+      { path: 'reg', component: RegisterComponent },
+    ],
   },
 
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
@@ -195,7 +194,8 @@ const routes: Routes = [
     PageNotFoundComponent,
     OnepostComponent,
     OneAnnounceComponent,
-    OneEventComponent
+    OneEventComponent,
+    CreateAsgnComponent,
   ],
   imports: [
     BrowserModule,
@@ -206,6 +206,7 @@ const routes: Routes = [
     NzFormModule,
     RouterModule.forRoot(routes),
     FormsModule,
+    FileUploadModule,
     HttpClientModule,
     NzAffixModule,
     NzAlertModule,
@@ -281,7 +282,7 @@ const routes: Routes = [
     TableModule,
     InputTextModule,
     EditorModule,
-    DropdownModule
+    DropdownModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
@@ -289,8 +290,8 @@ const routes: Routes = [
     AuthGuard,
     PostsResolverService,
     PostUserResolverService,
-    CurUserResolveService
+    CurUserResolveService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

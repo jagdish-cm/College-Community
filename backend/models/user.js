@@ -8,10 +8,11 @@ const userSchema = new mongoose.Schema({
   batchTo: { type: Date },
   enrolNo: { type: String, unique: true },
   password: { type: String },
+  semester: { type: Number },
   email: { type: String, unique: true },
   mobile: { type: Number, unique: true },
   designation: { type: String },
-  profilepicPath: { type: String }
+  profilepicPath: { type: String },
 });
 
 userSchema.plugin(uniqueValidator);

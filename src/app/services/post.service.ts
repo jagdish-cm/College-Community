@@ -177,4 +177,14 @@ export class PostService {
         this.reloadComponent();
       });
   }
+
+  likePost(postId : string, likerId : string){
+    let data = {
+      postId : postId,
+      likerId : likerId
+    }
+    this.http.put('http://localhost:3000/api/posts/like', data).subscribe(res =>{
+      console.log(res);
+    })
+  }
 }

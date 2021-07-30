@@ -9,8 +9,10 @@ const announceRouter = require("./routes/announce");
 const eventRouter = require("./routes/event");
 const notesRouter = require("./routes/notes");
 const booksRouter = require("./routes/books");
-const tutorialRouter = require('./routes/tutorials');
-const papersRouter = require('./routes/papers');
+const tutorialRouter = require("./routes/tutorials");
+const papersRouter = require("./routes/papers");
+const asgnRouter = require("./routes/asgn");
+var morgan = require("morgan");
 
 mongoose
   .connect(
@@ -20,7 +22,8 @@ mongoose
   .then(() => {
     console.log("Connected to DB");
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     console.log("Connection failed");
   });
 
@@ -36,6 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/images", express.static(path.join("backend/images")));
 app.use("/announceFiles", express.static(path.join("backend/announceFiles")));
+morgan(":method :url :status :res[content-length] - :response-time ms");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -58,7 +62,8 @@ app.use("/api/announce", announceRouter);
 app.use("/api/event", eventRouter);
 app.use("/api/notes", notesRouter);
 app.use("/api/books", booksRouter);
-app.use('/api/tutorials', tutorialRouter);
-app.use('/api/papers', papersRouter);
+app.use("/api/tutorials", tutorialRouter);
+app.use("/api/papers", papersRouter);
+app.use("/api/asgn", asgnRouter);
 
 module.exports = app;

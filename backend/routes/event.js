@@ -13,7 +13,7 @@ mongoose.Promise = global.Promise;
 
 const conn = mongoose.createConnection(dbURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 let gfs;
@@ -21,7 +21,7 @@ let gfs;
 conn.once("open", () => {
   //initialize the stream
   gfs = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "uploads"
+    bucketName: "uploads",
   });
 });
 
@@ -32,11 +32,11 @@ const storage = new GridFsStorage({
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
-        bucketName: "event"
+        bucketName: "event",
       };
       resolve(fileInfo);
     });
-  }
+  },
 });
 
 const router = express.Router();
@@ -55,15 +55,15 @@ router.post(
       title: req.body.title,
       description: req.body.description,
       dateFrom: req.body.dateFrom,
-      dateTo: req.body.dateTo
+      dateTo: req.body.dateTo,
     });
     if (req.files) {
       const files = res.req.files;
-      files.forEach(file => {
+      files.forEach((file) => {
         event.filesId.push(file.id);
       });
     }
-    event.save().then(newEvent => {
+    event.save().then((newEvent) => {
       console.log(newEvent);
       res.status(201).json({ ...newEvent.toObject(), id: newEvent._id });
     });
@@ -73,21 +73,20 @@ router.post(
 router.get("", (req, res, next) => {
   var docs = [];
   let docslength;
-  Event.find().then(documents => {
+  Event.find().then((documents) => {
     docslength = documents.length;
-    documents.map(event => {
-      Faculty.findById({ _id: event.creator }).then(user => {
+    documents.map((event) => {
+      Faculty.findById({ _id: event.creator }).then((user) => {
         user1 = {
           username: user.name,
-          branch: user.branch
+          branch: user.branch,
         };
         user1 = Object.assign(user1, event.toObject());
         docs.push(user1);
-        console.log(docs.length);
+
         if (docs.length === docslength) {
-          console.log("Events response sent");
           res.json({
-            events: docs
+            events: docs,
           });
         }
       });
@@ -106,13 +105,13 @@ router.get("/announceFiles", async (req, res, next) => {
         if (!files || files.length === 0) {
           console.log("file error");
           return res.status(404).json({
-            message: "error"
+            message: "error",
           });
         }
 
         var readstream = gfs.createReadStream({
           filename: files[0].filename,
-          root: "announce"
+          root: "announce",
         });
 
         res.set("Content-Type", files[0].contentType);

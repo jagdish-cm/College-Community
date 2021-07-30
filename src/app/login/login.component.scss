@@ -23,3 +23,8 @@ nz-spin {
   display: inline-block;
   margin-right: 16px;
 }
+
+::ng-deep .login-form .anticon {
+  position: relative;
+  bottom: 3px;
+}

@@ -1,0 +1,63 @@
+hide personalization in manage profile ✅
+
+remove payments from navbar ✅
+
+remove reports from navbar ✅
+
+room booking style dropdown menu ---
+
+in add rooms room booking style > room type ✅
+
+add multiple rooms (Jagdish) ------------------
+
+cumulative checkin-checkout date based on starting date and last checkout date (Jagdish) ==============
+
+separate pricing for kid enabled > add 2 rows instead of one
+
+day out capacity to be in day outing section
+
+remove discount coupons & price mgmt from property settings ✅
+
+frontdesk: change checkins left to arrivals left
+
+frontdesk: 1st col for rooms, 2nd col for day outing graphs (possible redesign needed)
+
+frontdesk: all, arrivals, in house filters | all bookings filters (Jagdish) ---------------
+
+frontdesk: show only today's bookings, hide payment status (Jagdish) =================
+
+payments; allow negative payment and handling, (show balance in red if negative)
+
+payments: possible refund option
+
+new booking: fix right column overlapping scrollbar ✅ | bind data 
+
+new bookings: kids, xtra bed logic to be revisited | availability logic
+
+init component on clicking on tab
+
+new booking: after adding pkg it should stay on that same service ✅
+
+new booking: split day outing and stay packages, move quantity on left side ✅
+
+new bookings: search customer from booking collection | same add in All Customers tab ---
+
+new bookings: remove gray area in payments ---
+
+manage bookings: remove extra booking ID > booking source ✅
+
+confirm booking after reaching payments section
+
+update discount adding as per xd ---
+
+all bookings: dont refresh data on status change ✅
+
+manage bookings: remove package name, hide stay or day out if not present, delete quantity, bind data
+
+manage bookings: show booking statuses ✅
+
+check xd for edit rooms in manage bookings
+
+manage bookings: update corporate booking as well, change reception to booking source, check edit customer info, hide group, itenary,chats ✅
+
+transactions: in details show payment description ---

@@ -10,7 +10,7 @@ const multer = require("multer");
 const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpg",
-  "image/jpg": "jpg"
+  "image/jpg": "jpg",
 };
 
 const storage = multer.diskStorage({
@@ -23,20 +23,17 @@ const storage = multer.diskStorage({
     cb(error, "backend/profilePics");
   },
   filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .split(" ")
-      .join("-");
+    const name = file.originalname.toLowerCase().split(" ").join("-");
     const ext = MIME_TYPE_MAP[file.mimetype];
     cb(null, name + "-" + Date.now() + "." + ext);
-  }
+  },
 });
 
 router.post(
   "/signup",
   multer({ storage: storage }).single("profilepic"),
   (req, res, next) => {
-    bcrypt.hash(req.body.password, 10).then(hash => {
+    bcrypt.hash(req.body.password, 10).then((hash) => {
       const user = new User({
         name: req.body.name,
         branch: req.body.branch,
@@ -46,7 +43,8 @@ router.post(
         password: hash,
         email: req.body.email,
         mobile: req.body.mobile,
-        designation: "Student"
+        semester: req.body.semester,
+        designation: "Student",
       });
       console.log("got here");
       var d = new Date(Date.now());
@@ -63,14 +61,14 @@ router.post(
       console.log(user);
       user
         .save()
-        .then(result => {
+        .then((result) => {
           console.log("user created");
           res.status(201).json({ message: "User created", result: result });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           res.status(500).json({
-            error: err
+            error: err,
           });
         });
     });
@@ -81,7 +79,7 @@ router.post(
   "/signupfac",
   multer({ storage: storage }).single("profilepic"),
   (req, res, next) => {
-    bcrypt.hash(req.body.password, 10).then(hash => {
+    bcrypt.hash(req.body.password, 10).then((hash) => {
       const user = new Faculty({
         name: req.body.name,
         branch: req.body.branch,
@@ -89,7 +87,7 @@ router.post(
         password: hash,
         email: req.body.email,
         mobile: req.body.mobile,
-        designation: "Faculty"
+        designation: "Faculty",
       });
       console.log("got here");
       if (req.file) {
@@ -102,14 +100,14 @@ router.post(
       console.log(user);
       user
         .save()
-        .then(result => {
+        .then((result) => {
           console.log("user created");
           res.status(201).json({ message: "User created", result: result });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           res.status(500).json({
-            error: err
+            error: err,
           });
         });
     });
@@ -120,10 +118,10 @@ router.post("/login", (req, res, next) => {
   //email exist or not
   let fetchedUser;
   User.findOne({ email: req.body.email })
-    .then(user => {
+    .then((user) => {
       if (!user) {
         console.log("no user");
-        Faculty.findOne({ email: req.body.email }).then(facuser => {
+        Faculty.findOne({ email: req.body.email }).then((facuser) => {
           if (!facuser) {
             console.log("no faculty");
             return res.status(401).json({ message: "Email not found" });
@@ -143,7 +141,7 @@ router.post("/login", (req, res, next) => {
               );
               res.status(200).json({
                 token: token,
-                designation: "Faculty"
+                designation: "Faculty",
               });
             }
           }
@@ -160,12 +158,12 @@ router.post("/login", (req, res, next) => {
           );
           res.status(200).json({
             token: token,
-            designation: "Student"
+            designation: "Student",
           });
         }
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       return res.status(401).json({ message: "Auth failed" });
     });
@@ -173,18 +171,24 @@ router.post("/login", (req, res, next) => {
 
 router.get("/getCurUserInfo", checkAuth, (req, res, next) => {
   User.findById(req.userData.userId)
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        Faculty.findById(req.userData.userId).then(faculty => {
+        Faculty.findById(req.userData.userId).then((faculty) => {
           return res.status(201).json({ user: faculty });
         });
       } else {
         return res.status(201).json({ user: user });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err + " id not found");
     });
+});
+
+router.get("/getusers", (req, res, next) => {
+  User.find({ branch: "Computer Science" }).then((user) => {
+    console.log(user);
+  });
 });
 
 module.exports = router;

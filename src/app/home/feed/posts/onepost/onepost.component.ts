@@ -44,6 +44,7 @@ export class OnepostComponent implements OnInit {
 
   ngOnInit(): void {
     this.pst = this.post;
+    console.log(this.post)
 
     if(this.authService.isLogged() ){
       this.curUser = this.authService.getCurUser();
@@ -190,5 +191,9 @@ export class OnepostComponent implements OnInit {
       this.createdPost.value.imagePath
     );
     this.editPostToggle = false;
+  }
+
+  likePost(){
+    this.postService.likePost(this.post._id, this.curUser._id);
   }
 }
