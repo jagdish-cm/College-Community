@@ -5,13 +5,20 @@ const papersSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  isAdminApproved: {
+    type: Number,
+    default: 0
+    // 0 pending,
+    // 1 approved,
+    // 2 rejected
+  },
   exam: { type: String, required: true },
   subjects: { type: String, required: true },
   branch: { type: String, required: true },
   semester: { type: String, required: true },
   filename: { type: String, required: true },
-  sessionFrom : { type : String, required : true},
-  sessionTo : { type : String, required : true},
+  sessionFrom: { type: String, required: true },
+  sessionTo: { type: String, required: true },
   date: String
 });
 
@@ -21,7 +28,7 @@ papersSchema.index(
 );
 
 papersSchema.statics = {
-  searchPartial: function(q, callback) {
+  searchPartial: function (q, callback) {
     return this.find(
       {
         $or: [{ semester: new RegExp(q, "gi") }, { subject: new RegExp(q, "gi") }]
@@ -30,7 +37,7 @@ papersSchema.statics = {
     );
   },
 
-  searchFull: function(q, callback) {
+  searchFull: function (q, callback) {
     return this.find(
       {
         $text: { $search: q, $caseSensitive: false }
@@ -39,7 +46,7 @@ papersSchema.statics = {
     );
   },
 
-  search: function(q, callback) {
+  search: function (q, callback) {
     this.searchFull(q, (err, data) => {
       if (err) return callback(err, data);
       if (!err && data.length) return callback(err, data);

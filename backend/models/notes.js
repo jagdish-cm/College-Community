@@ -6,6 +6,13 @@ const notesSchema = new mongoose.Schema({
     required: true
   },
   topic: { type: String, required: true },
+  isAdminApproved: {
+    type: Number,
+    default: 0
+    // 0 pending,
+    // 1 approved,
+    // 2 rejected
+  },
   subject: { type: String, required: true },
   branch: { type: String, required: true },
   semester: { type: String, required: true },
@@ -19,7 +26,7 @@ notesSchema.index(
 );
 
 notesSchema.statics = {
-  searchPartial: function(q, callback) {
+  searchPartial: function (q, callback) {
     return this.find(
       {
         $or: [{ topic: new RegExp(q, "gi") }, { subject: new RegExp(q, "gi") }]
@@ -28,7 +35,7 @@ notesSchema.statics = {
     );
   },
 
-  searchFull: function(q, callback) {
+  searchFull: function (q, callback) {
     return this.find(
       {
         $text: { $search: q, $caseSensitive: false }
@@ -37,7 +44,7 @@ notesSchema.statics = {
     );
   },
 
-  search: function(q, callback) {
+  search: function (q, callback) {
     this.searchFull(q, (err, data) => {
       if (err) return callback(err, data);
       if (!err && data.length) return callback(err, data);

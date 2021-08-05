@@ -5,6 +5,7 @@ const multer = require("multer");
 const User = require("../models/user");
 const checkAuth = require("../middleware/check-auth");
 const { indexOf } = require("lodash");
+const checkFacAuth = require('../middleware/check-faculty-auth');
 
 const router = express.Router();
 
@@ -41,8 +42,9 @@ router.post(
       // designation: req.body.designation,
       // profileimg: req.body.profileimg,
       time: req.body.time,
+      isAdminApproved: 0,
       lcounts: req.body.lcounts,
-      likedBy : [],
+      likedBy: [],
       postContent: req.body.postContent,
       //   comments: Comment[],
       comcounts: req.body.comcounts,
@@ -75,9 +77,8 @@ router.get("", (req, res, next) => {
             };
             user1 = Object.assign(user1, post.toObject());
             docs.push(user1);
-            if (docs.length === docslength) {
-              // console.log(docs);
 
+            if (docs.length === docslength) {
               res.json({
                 message: "posts response received",
                 posts: docs,
@@ -112,31 +113,69 @@ router.get("", (req, res, next) => {
   });
 });
 
-router.put("/like", async (req, res, next) =>{
+router.put('/approve-reject', checkFacAuth, async (req, res, next) => {
+  try {
+    const postData = {
+      postId: req.body.postId,
+      status: req.body.status
+    }
+    await Post.updateOne(
+      { _id: postData.postId },
+      {
+        $set: {
+          isAdminApproved: postData.status
+        }
+      }
+    )
+    return res.status(200).json({
+      msg: "post updated"
+    })
+  } catch (error) {
+    res.status(401).json({
+      msg: error.message
+    })
+  }
+})
+
+router.put("/like", async (req, res, next) => {
   try {
     let data = req.body;
     console.log('hellloollllllll')
-    let post = await Post.findOne({_id : data.postId});
-    if(post.likedBy.indexOf(data.likerId) == -1){
-      let likerArray = post.likedBy.push(data.likerId)
-      console.log(likerArray)
+    console.log(data);
+    let post = await Post.findOne({ _id: data.postId });
+    let likedUsers = post.likedBy;
+    console.log(typeof (likedUsers), likedUsers)
+    if (likedUsers.indexOf(data.likerId) == -1) {
+      likedUsers.push(data.likerId)
+      console.log(likedUsers)
       let postNew = await Post.updateOne(
-        {_id : data.postId},
+        { _id: data.postId },
         {
-          $set : {
-            lcounts : post.lcounts + 1,
-            likedBy : likerArray
+          $set: {
+            lcounts: post.lcounts + 1,
+            likedBy: likedUsers
           }
         }
       )
-      return res.status(200).json({ post : postNew});
+      return res.status(200).json({ post: postNew });
     }
-    else{
-     return res.status(400).json({ message : 'Post already liked' });
+    else {
+      likedUsers.splice(likedUsers.indexOf(data.likerId), 1);
+      let postNew = await Post.updateOne(
+        { _id: data.postId },
+        {
+          $set: {
+            lcounts: post.lcounts - 1,
+            likedBy: likedUsers
+          }
+        }
+      )
+      console.log('post unliked')
+      return res.status(400).json({ message: 'Post unliked' });
     }
   } catch (error) {
     console.log(error)
-    return res.status(400).json({msg : error.message})
+    return res.status(400).json({ msg: error.message })
   }
 })
 

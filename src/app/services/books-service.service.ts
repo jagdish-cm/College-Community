@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  switchMap,
 } from 'rxjs/internal/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BooksService {
   constructor(
@@ -30,7 +30,7 @@ export class BooksService {
     branch: string,
     semester: number,
     file: File
-  ) : Observable<any> {
+  ): Observable<any> {
     const book = new FormData();
     book.append('creator', creator);
     book.append('title', title);
@@ -43,22 +43,21 @@ export class BooksService {
     book.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-     return this.http
-      .post<{ book; bid: string }>(
-        'http://localhost:3000/api/books/create',
-        book
-      );
+    return this.http.post<{ book; bid: string }>(
+      'http://localhost:4000/api/books/create',
+      book
+    );
   }
 
   getBooks(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/books');
+    return this.http.get<[]>('http://localhost:4000/api/books');
   }
 
   getFile(filename: string) {
     let file = { filename: filename };
     this.http
-      .post('http://localhost:3000/api/books/getBook', file, {
-        responseType: 'blob'
+      .post('http://localhost:4000/api/books/getBook', file, {
+        responseType: 'blob',
       })
       .subscribe((response: any) => {
         //download the file
@@ -79,14 +78,14 @@ export class BooksService {
     return terms.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(term => this.searchEntries(term))
+      switchMap((term) => this.searchEntries(term))
     );
   }
 
   filterRes(filterItems: object) {
     console.log(filterItems);
     return this.http.post(
-      'http://localhost:3000/api/books/filter',
+      'http://localhost:4000/api/books/filter',
       filterItems
     );
   }
@@ -94,11 +93,17 @@ export class BooksService {
   searchEntries(term) {
     console.log(term);
     let search = { search: term };
-    return this.http.post('http://localhost:3000/api/books/search', search);
+    return this.http.post('http://localhost:4000/api/books/search', search);
   }
 
-  deleteFile(id: string) : Observable<any> {
-    return this.http
-      .delete('http://localhost:3000/api/books/' + id);
+  deleteFile(id: string): Observable<any> {
+    return this.http.delete('http://localhost:4000/api/books/' + id);
+  }
+
+  approveOrRejectBook(data): Observable<any> {
+    return this.http.put(
+      'http://localhost:4000/api/books/approve-reject',
+      data
+    );
   }
 }

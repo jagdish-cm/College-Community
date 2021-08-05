@@ -65,7 +65,7 @@ export class AuthService {
     }
 
     this.http
-      .post('http://localhost:3000/api/user/signup', regUser)
+      .post('http://localhost:4000/api/user/signup', regUser)
       .subscribe((result) => {
         console.log(result);
         this.router.navigate(['/login']);
@@ -95,7 +95,7 @@ export class AuthService {
     }
 
     this.http
-      .post('http://localhost:3000/api/user/signupfac', regUser)
+      .post('http://localhost:4000/api/user/signupfac', regUser)
       .subscribe((result) => {
         console.log(result);
         this.router.navigate(['/login']);
@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   setCurUserInfo(): Observable<any> {
-    return this.http.get('http://localhost:3000/api/user/getCurUserInfo');
+    return this.http.get('http://localhost:4000/api/user/getCurUserInfo');
   }
 
   getCurUser() {
@@ -113,7 +113,7 @@ export class AuthService {
   loginUser(email: string, password: string) {
     const user = { email: email, password: password };
     this.http
-      .post<{ token: string }>('http://localhost:3000/api/user/login', user)
+      .post<{ token: string }>('http://localhost:4000/api/user/login', user)
       .subscribe((result) => {
         const token = result.token;
         this.atoken = token;

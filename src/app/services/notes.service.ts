@@ -6,25 +6,23 @@ import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  switchMap,
 } from 'rxjs/internal/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotesService {
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  addNotes (
+  addNotes(
     creator: string,
     topic: string,
     subject: string,
     branch: string,
     semester: number,
     file: File
-  ) :Observable<any> {
+  ): Observable<any> {
     const notes = new FormData();
     notes.append('creator', creator);
     notes.append('topic', topic);
@@ -37,22 +35,21 @@ export class NotesService {
     notes.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-    return this.http
-      .post<{ notes; nid: string }>(
-        'http://localhost:3000/api/notes/create',
-        notes
-      );
+    return this.http.post<{ notes; nid: string }>(
+      'http://localhost:4000/api/notes/create',
+      notes
+    );
   }
 
   getNotes(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/notes');
+    return this.http.get<[]>('http://localhost:4000/api/notes');
   }
 
   getFile(filename: string) {
     let file = { filename: filename };
     this.http
-      .post('http://localhost:3000/api/notes/getfile', file, {
-        responseType: 'blob'
+      .post('http://localhost:4000/api/notes/getfile', file, {
+        responseType: 'blob',
       })
       .subscribe((response: any) => {
         //download the file
@@ -73,14 +70,14 @@ export class NotesService {
     return terms.pipe(
       debounceTime(100),
       distinctUntilChanged(),
-      switchMap(term => this.searchEntries(term))
+      switchMap((term) => this.searchEntries(term))
     );
   }
 
   filterRes(filterItems: object) {
     console.log(filterItems);
     return this.http.post(
-      'http://localhost:3000/api/notes/filter',
+      'http://localhost:4000/api/notes/filter',
       filterItems
     );
   }
@@ -88,11 +85,17 @@ export class NotesService {
   searchEntries(term) {
     console.log(term);
     let search = { search: term };
-    return this.http.post('http://localhost:3000/api/notes/search', search);
+    return this.http.post('http://localhost:4000/api/notes/search', search);
   }
 
-  deleteFile(id: string) : Observable<any> {
-    return this.http
-      .delete('http://localhost:3000/api/notes/' + id);
+  deleteFile(id: string): Observable<any> {
+    return this.http.delete('http://localhost:4000/api/notes/' + id);
+  }
+
+  approveOrRejectBook(data): Observable<any> {
+    return this.http.put(
+      'http://localhost:4000/api/notes/approve-reject',
+      data
+    );
   }
 }

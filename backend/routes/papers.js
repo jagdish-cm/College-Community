@@ -7,6 +7,7 @@ const Faculty = require("../models/faculty");
 const mongoose = require("mongoose");
 const GridFsStorage = require("multer-gridfs-storage");
 const GridFsStream = require("gridfs-stream");
+const checkFacAuth = require('../middleware/check-faculty-auth');
 
 const router = express.Router();
 const dbURI =
@@ -57,8 +58,8 @@ router.post(
       branch: req.body.branch,
       semester: req.body.semester,
       date: req.body.date,
-      sessionFrom : req.body.sessionFrom,
-      sessionTo : req.body.sessionTo
+      sessionFrom: req.body.sessionFrom,
+      sessionTo: req.body.sessionTo
     });
     console.log(res.req.file);
 
@@ -85,10 +86,10 @@ router.post("/getfile", (req, res, next) => {
       filename: filename
     });
     gridReadStream.pipe(res);
-    gridReadStream.on("data", function(data) {
+    gridReadStream.on("data", function (data) {
       res.write(data);
     });
-    gridReadStream.on("end", function() {
+    gridReadStream.on("end", function () {
       res.status(200).end();
     });
   });
@@ -163,13 +164,14 @@ router.post("/filter", (req, res, next) => {
   let session = req.body.session
   console.log(req.body.branch);
   console.log(req.body.sem);
+  console.log(req.body.session)
   //two or more filters
-  if ((branch.length && sem.length) || (branch.length && session.length) || (session.length && sem.length) || (branch.length && session.length && sem.length)) {
+  if ((branch.length && sem.length) || (branch.length && session?.length) || (session?.length && sem.length) || (branch.length && session?.length && sem.length)) {
     Papers.find({
       $and: [
         { branch: { $in: req.body.branch } },
         { semester: { $in: req.body.sem } },
-        { session : { $in : req.body.session }}
+        // { session: { $in: req.body.session } }
       ]
     }).then(resData => {
       console.log(resData);
@@ -181,7 +183,7 @@ router.post("/filter", (req, res, next) => {
       $or: [
         { branch: { $in: req.body.branch } },
         { semester: { $in: req.body.sem } },
-        { session : { $in : req.body.session}}
+        // { session: { $in: req.body.session } }
       ]
     }).then(resData => {
       console.log(resData);
@@ -194,8 +196,34 @@ router.delete("/:id", checkAuth, (req, res, next) => {
   console.log("paperId to delete " + req.params.id);
   Papers.deleteOne({ _id: req.params.id }).then(papers => {
     console.log("deleted in backend");
-        res.status(201).json({ message: "papers deleted" });
+    res.status(201).json({ message: "papers deleted" });
   });
 });
+
+router.put('/approve-reject', checkFacAuth, async (req, res, next) => {
+  try {
+    const paperData = {
+      paperId: req.body.paperId,
+      status: req.body.status
+    }
+    console.log('hello')
+    console.log(paperData)
+    await Papers.updateOne(
+      { _id: paperData.paperId },
+      {
+        $set: {
+          isAdminApproved: paperData.status
+        }
+      }
+    )
+    return res.status(200).json({
+      msg: "paper updated"
+    })
+  } catch (error) {
+    res.status(401).json({
+      msg: error.message
+    })
+  }
+})
 
 module.exports = router;

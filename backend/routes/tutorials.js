@@ -4,6 +4,7 @@ const Tutorial = require('../models/tutorial');
 const User = require("../models/user");
 const Faculty = require("../models/faculty");
 const mongoose = require("mongoose");
+const checkFacAuth = require('../middleware/check-faculty-auth');
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.post(
       subject: req.body.subject,
       branch: req.body.branch,
       semester: req.body.semester,
-      ytLink : req.body.ytLink,
+      ytLink: req.body.ytLink,
       date: req.body.date
     });
 
@@ -122,8 +123,34 @@ router.delete("/:id", checkAuth, (req, res, next) => {
   console.log("tutorialId to delete " + req.params.id);
   Tutorial.deleteOne({ _id: req.params.id }).then(tutorial => {
     console.log("deleted in backend");
-        res.status(201).json({ message: "tutorial deleted" });
+    res.status(201).json({ message: "tutorial deleted" });
   });
 });
+
+router.put('/approve-reject', checkFacAuth, async (req, res, next) => {
+  try {
+    const tutorialData = {
+      tutorialId: req.body.tutorialId,
+      status: req.body.status
+    }
+    console.log('hello')
+    console.log(tutorialData)
+    await Tutorial.updateOne(
+      { _id: tutorialData.tutorialId },
+      {
+        $set: {
+          isAdminApproved: tutorialData.status
+        }
+      }
+    )
+    return res.status(200).json({
+      msg: "tutorial updated"
+    })
+  } catch (error) {
+    res.status(401).json({
+      msg: error.message
+    })
+  }
+})
 
 module.exports = router;

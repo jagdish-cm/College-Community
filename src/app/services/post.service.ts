@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PostService {
   constructor(
@@ -49,13 +49,20 @@ export class PostService {
     console.log('at 3');
     this.http
       .post<{ post; postid: string }>(
-        'http://localhost:3000/api/posts',
+        'http://localhost:4000/api/posts',
         newpost
       )
-      .subscribe(resdata => {
+      .subscribe((resdata) => {
         console.log('post created');
         this.reloadComponent();
       });
+  }
+
+  approveOrRejectPost(data): Observable<any> {
+    return this.http.put(
+      'http://localhost:4000/api/posts/approve-reject',
+      data
+    );
   }
 
   reloadComponent() {
@@ -67,11 +74,11 @@ export class PostService {
   }
 
   getPost(postid: string) {
-    return { ...this.posts.find(p => p.id === postid) };
+    return { ...this.posts.find((p) => p.id === postid) };
   }
 
   getPosts(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/posts');
+    return this.http.get<[]>('http://localhost:4000/api/posts');
     // .pipe
     // map(postData => {
     //   return postData.posts.map(post => {
@@ -133,7 +140,7 @@ export class PostService {
     }
     console.log('at 3');
     this.http
-      .put('http://localhost:3000/api/posts/' + id, newpost)
+      .put('http://localhost:4000/api/posts/' + id, newpost)
       .subscribe(() => {
         this.reloadComponent();
       });
@@ -157,7 +164,7 @@ export class PostService {
       name: string;
       designation: string;
       profileimg: string;
-    }>('http://localhost:3000/api/posts/postUserInfo/' + userid);
+    }>('http://localhost:4000/api/posts/postUserInfo/' + userid);
     // .subscribe(result => {
     //   const puser = {
     //     username: result.name,
@@ -172,19 +179,21 @@ export class PostService {
 
   deletePost(postId: string) {
     this.http
-      .delete<{ message: string }>('http://localhost:3000/api/posts/' + postId)
-      .subscribe(message => {
+      .delete<{ message: string }>('http://localhost:4000/api/posts/' + postId)
+      .subscribe((message) => {
         this.reloadComponent();
       });
   }
 
-  likePost(postId : string, likerId : string){
+  likePost(postId: string, likerId: string) {
     let data = {
-      postId : postId,
-      likerId : likerId
-    }
-    this.http.put('http://localhost:3000/api/posts/like', data).subscribe(res =>{
-      console.log(res);
-    })
+      postId: postId,
+      likerId: likerId,
+    };
+    this.http
+      .put('http://localhost:4000/api/posts/like', data)
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
 }

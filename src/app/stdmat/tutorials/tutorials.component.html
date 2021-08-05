@@ -122,7 +122,13 @@
       </ng-template>
       <div *ngIf="isDataLoaded" class="row pt-4 pl-3 notessec">
         <div *ngFor="let tutorial of tutorials">
-          <div class="col pb-3 px-0 mx-2 cd">
+          <div
+            *ngIf="
+              tutorial.isAdminApproved == 1 ||
+              (curUser.isAdmin && tutorial.isAdminApproved == 0)
+            "
+            class="col pb-3 px-0 mx-2 cd"
+          >
             <a href="{{ tutorial.ytLink }}" target="_blank" class="cardlink"
               ><div class="card" style="width: 9rem">
                 <div class="m_load_here">
@@ -180,10 +186,34 @@
                       <i class="ml-auto far fa-trash-alt"></i>
                       &nbsp;Delete
                     </button>
+                    <div
+                      *ngIf="curUser.isAdmin && tutorial.isAdminApproved == 0"
+                      class="row my-2"
+                    >
+                      <div class="col" style="text-align: center">
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          label="Allow"
+                          (click)="onApproveReject(tutorial._id, 1)"
+                          icon="pi pi-check"
+                          class="p-button-success"
+                        ></button>
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          label="Reject"
+                          (click)="onApproveReject(tutorial._id, 2)"
+                          icon="pi pi-times"
+                          class="p-button-danger"
+                        ></button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div></a
-            >
+                </div></div
+            ></a>
           </div>
         </div>
       </div>

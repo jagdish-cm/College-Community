@@ -7,6 +7,10 @@ const facultySchema = new mongoose.Schema({
   employeeId: { type: String, unique: true },
   password: { type: String },
   email: { type: String, unique: true },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
   mobile: { type: Number, unique: true },
   designation: { type: String },
   profilepicPath: { type: String }

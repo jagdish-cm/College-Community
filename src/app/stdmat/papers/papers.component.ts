@@ -4,20 +4,22 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  ValidatorFn
+  ValidatorFn,
 } from '@angular/forms';
 import {
   NzNotificationService,
-  NzNotificationPlacement
+  NzNotificationPlacement,
 } from 'ng-zorro-antd/notification';
 import { PapersService } from '../../services/papers.service';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-papers',
   templateUrl: './papers.component.html',
-  styleUrls: ['./papers.component.scss']
+  styleUrls: ['./papers.component.scss'],
+  providers: [MessageService],
 })
 export class PapersComponent implements OnInit {
   placement: NzDrawerPlacement = 'bottom';
@@ -37,26 +39,24 @@ export class PapersComponent implements OnInit {
   popVisible: boolean = false;
   filterTerm$ = new Subject<object>();
   curUserDes: any;
-  isDataLoaded : boolean = false;
-  uploadingStatus : boolean = false;
+  isDataLoaded: boolean = false;
+  uploadingStatus: boolean = false;
   visible = false;
-  notFound : boolean = false ;
-  searching : boolean = false;
-  filtering : boolean = false;
-
-
-
+  notFound: boolean = false;
+  searching: boolean = false;
+  filtering: boolean = false;
 
   constructor(
     private fb: FormBuilder,
+    private messageService: MessageService,
     private notification: NzNotificationService,
     private papersService: PapersService,
-    private authService : AuthService
+    private authService: AuthService
   ) {
-    this.papersService.search(this.searchTerm$).subscribe(res => {
+    this.papersService.search(this.searchTerm$).subscribe((res) => {
       this.papers = res;
       console.log(this.papers.length);
-      if(this.papers.length === 0){
+      if (this.papers.length === 0) {
         this.notFound = true;
       }
       this.searching = false;
@@ -67,60 +67,60 @@ export class PapersComponent implements OnInit {
       'Electrical',
       'Agriculture',
       'Mechanical',
-      'Civil'
+      'Civil',
     ];
     this.sems = [1, 2, 3, 4, 5, 6, 7, 8];
-    this.branches.forEach(element => {
+    this.branches.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
       a['checked'] = false;
       this.checkOptionOne.push(a);
     });
-    this.sems.forEach(element => {
+    this.sems.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
       a['checked'] = false;
       this.checkOptionTwo.push(a);
     });
-    this.papersService.getPapers().subscribe((result) =>{
+    this.papersService.getPapers().subscribe((result) => {
       console.log('in papers observable');
       this.papers = result.papers;
       this.isDataLoaded = true;
-    })
+    });
   }
 
   ngOnInit(): void {
     this.papersForm = this.fb.group({
-      creator: ['', Validators.required],  
-      exam: ['', Validators.required],  //done
+      creator: ['', Validators.required],
+      exam: ['', Validators.required], //done
       subjects: ['', Validators.required], //done
-      branch: ['', Validators.required],  //done
-      semester: ['', Validators.required],  //done
-      sessionFrom: ['', Validators.required],  //done
-      sessionTo: ['', Validators.required],  //done
-      file: [null, [Validators.required, this.fileExtValidator]] //done
+      branch: ['', Validators.required], //done
+      semester: ['', Validators.required], //done
+      sessionFrom: ['', Validators.required], //done
+      sessionTo: ['', Validators.required], //done
+      file: [null, [Validators.required, this.fileExtValidator]], //done
     });
 
-    if(this.authService.isLogged() ){
-      console.log('yes logged in')
+    if (this.authService.isLogged()) {
+      console.log('yes logged in');
       this.curUser = this.authService.getCurUser();
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
       console.log('designation ' + this.curUserDes);
     }
 
-    this.authService.distributeCurUserInfo().subscribe((result) =>{
+    this.authService.distributeCurUserInfo().subscribe((result) => {
       console.log('disti logged in');
       this.curUser = result;
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
       this.papersForm.patchValue({ creator: this.curUser._id });
-        this.papersForm.get('creator').updateValueAndValidity();
-    })
+      this.papersForm.get('creator').updateValueAndValidity();
+    });
 
-    if(this.isDataLoaded){
+    if (this.isDataLoaded) {
       console.log(typeof this.papers[0].date);
       this.papers = this.papers.sort((a, b) => a.date - b.date);
       console.log(this.papers);
@@ -155,7 +155,7 @@ export class PapersComponent implements OnInit {
     }
   }
 
-  searchItem(search : string){
+  searchItem(search: string) {
     this.notFound = false;
     this.searching = true;
     this.searchTerm$.next(search);
@@ -195,9 +195,9 @@ export class PapersComponent implements OnInit {
         nzPlacement: position,
         nzStyle: {
           width: '600px',
-          color: 'red'
+          color: 'red',
         },
-        nzClass: 'test-class'
+        nzClass: 'test-class',
       }
     );
   }
@@ -216,30 +216,35 @@ export class PapersComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('heelo');
     for (const i in this.papersForm.controls) {
       this.papersForm.controls[i].markAsDirty();
       this.papersForm.controls[i].updateValueAndValidity();
     }
     if (this.papersForm.controls.file.status === 'INVALID') {
       this.submitFileError = true;
+      console.log('heelo');
     } else if (this.papersForm.status === 'VALID') {
+      console.log('heelo');
       this.uploadingStatus = true;
       console.log(this.papersForm);
-      this.papersService.addPaper(
-        this.papersForm.value.creator,
-        this.papersForm.value.exam,
-        this.papersForm.value.subjects,
-        this.papersForm.value.branch,
-        this.papersForm.value.semester,
-        this.papersForm.value.sessionFrom,
-        this.papersForm.value.sessionTo,
-        this.papersForm.value.file
-      ).subscribe((result) =>{
-        this.uploadingStatus = false;
-        this.close();
-        console.log(result);
-        this.papers.push(result);
-      });
+      this.papersService
+        .addPaper(
+          this.papersForm.value.creator,
+          this.papersForm.value.exam,
+          this.papersForm.value.subjects,
+          this.papersForm.value.branch,
+          this.papersForm.value.semester,
+          this.papersForm.value.sessionFrom,
+          this.papersForm.value.sessionTo,
+          this.papersForm.value.file
+        )
+        .subscribe((result) => {
+          this.uploadingStatus = false;
+          this.close();
+          console.log(result);
+          this.papers.push(result);
+        });
     }
   }
 
@@ -258,12 +263,12 @@ export class PapersComponent implements OnInit {
     this.filtering = true;
     let branchFilters = [];
     let semFilters = [];
-    this.checkOptionOne.forEach(element => {
+    this.checkOptionOne.forEach((element) => {
       if (element.checked == true) {
         branchFilters.push(element.value);
       }
     });
-    this.checkOptionTwo.forEach(element => {
+    this.checkOptionTwo.forEach((element) => {
       if (element.checked == true) {
         semFilters.push(element.value);
       }
@@ -276,10 +281,10 @@ export class PapersComponent implements OnInit {
       filterItems['branch'] = this.branches;
       filterItems['sem'] = this.sems;
     }
-    this.papersService.filterRes(filterItems).subscribe(res => {
+    this.papersService.filterRes(filterItems).subscribe((res) => {
       console.log(res);
       this.papers = res;
-      if(this.papers.length === 0){
+      if (this.papers.length === 0) {
         this.notFound = true;
       }
       this.filtering = false;
@@ -291,19 +296,43 @@ export class PapersComponent implements OnInit {
   }
 
   deleteFile(id: string) {
-    this.papersService.deleteFile(id).subscribe((result) =>{
+    this.papersService.deleteFile(id).subscribe((result) => {
       console.log(result);
-      this.papers = this.papers.filter((book) =>{
+      this.papers = this.papers.filter((book) => {
         return book._id !== id;
-      })
+      });
     });
   }
 
-
   visibleSidebar4;
 
-
-
+  onApproveReject(id: string, status: number) {
+    const data = {
+      paperId: id,
+      status: status,
+    };
+    this.papersService.approveOrRejectBook(data).subscribe((res) => {
+      console.log(res);
+      console.log(status);
+      if (status == 1) {
+        console.log('display msg');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Approved',
+          life: 5000,
+          detail: 'Book is now visible to other users!',
+        });
+      } else if (status == 2) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Declined',
+          detail: 'Book will not be visible to other users!',
+        });
+      }
+      this.papers[this.papers.findIndex((x) => x._id === id)].isAdminApproved =
+        status;
+    });
+  }
 
   list = [1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 88];
   title: string = 'Trees and Graphs';

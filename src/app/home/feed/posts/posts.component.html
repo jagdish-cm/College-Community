@@ -13,7 +13,14 @@
   <div *ngIf="isDataLoaded">
     <div *ngFor="let post of posts">
       <!-- one post -->
-      <app-onepost [post]="post" *ngIf="!isLoading"></app-onepost>
+      <app-onepost
+        [post]="post"
+        *ngIf="
+          (!isLoading && post.isAdminApproved == 1) ||
+          (!isLoading && curUser?.isAdmin && post.isAdminApproved == 0)
+        "
+      ></app-onepost>
     </div>
   </div>
 </div>
+<p-toast position="bottom-center"></p-toast>

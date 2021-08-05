@@ -45,12 +45,12 @@ export class EventService {
     });
     return this.http
       .post<{ event; eid: string }>(
-        'http://localhost:3000/api/event/create',
+        'http://localhost:4000/api/event/create',
         event
       );
   }
 
   getEvents(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/event');
+    return this.http.get<[]>('http://localhost:4000/api/event');
   }
 }

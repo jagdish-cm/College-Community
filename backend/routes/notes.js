@@ -7,6 +7,7 @@ const Faculty = require("../models/faculty");
 const mongoose = require("mongoose");
 const GridFsStorage = require("multer-gridfs-storage");
 const GridFsStream = require("gridfs-stream");
+const checkFacAuth = require('../middleware/check-faculty-auth');
 
 const router = express.Router();
 const dbURI =
@@ -84,10 +85,10 @@ router.post("/getfile", (req, res, next) => {
       filename: filename
     });
     gridReadStream.pipe(res);
-    gridReadStream.on("data", function(data) {
+    gridReadStream.on("data", function (data) {
       res.write(data);
     });
-    gridReadStream.on("end", function() {
+    gridReadStream.on("end", function () {
       res.status(200).end();
     });
   });
@@ -188,8 +189,34 @@ router.delete("/:id", checkAuth, (req, res, next) => {
   console.log("notesId to delete " + req.params.id);
   Notes.deleteOne({ _id: req.params.id }).then(notes => {
     console.log("deleted in backend");
-        res.status(201).json({ message: "notes deleted" });
+    res.status(201).json({ message: "notes deleted" });
   });
 });
+
+router.put('/approve-reject', checkFacAuth, async (req, res, next) => {
+  try {
+    const notesData = {
+      notesId: req.body.notesId,
+      status: req.body.status
+    }
+    console.log('hello')
+    console.log(notesData)
+    await Notes.updateOne(
+      { _id: notesData.notesId },
+      {
+        $set: {
+          isAdminApproved: notesData.status
+        }
+      }
+    )
+    return res.status(200).json({
+      msg: "notes updated"
+    })
+  } catch (error) {
+    res.status(401).json({
+      msg: error.message
+    })
+  }
+})
 
 module.exports = router;

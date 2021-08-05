@@ -6,29 +6,26 @@ import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  switchMap,
 } from 'rxjs/internal/operators';
 import papers from '../../../backend/models/papers';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PapersService {
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient
-  ) { }
-
-  addPaper (
+  addPaper(
     creator: string,
     exam: string,
     subjects: string,
     branch: string,
     semester: number,
-    sessionFrom : string,
-    sessionTo : string,
+    sessionFrom: string,
+    sessionTo: string,
     file: File
-  ) :Observable<any> {
+  ): Observable<any> {
     const paper = new FormData();
     paper.append('creator', creator);
     paper.append('exam', exam);
@@ -43,22 +40,21 @@ export class PapersService {
     paper.forEach((value, key) => {
       console.log(key + ' ' + value);
     });
-    return this.http
-      .post<{ paper; pid: string }>(
-        'http://localhost:3000/api/papers/create',
-        paper
-      );
+    return this.http.post<{ paper; pid: string }>(
+      'http://localhost:4000/api/papers/create',
+      paper
+    );
   }
 
   getPapers(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/papers');
+    return this.http.get<[]>('http://localhost:4000/api/papers');
   }
 
   getFile(filename: string) {
     let file = { filename: filename };
     this.http
-      .post('http://localhost:3000/api/papers/getfile', file, {
-        responseType: 'blob'
+      .post('http://localhost:4000/api/papers/getfile', file, {
+        responseType: 'blob',
       })
       .subscribe((response: any) => {
         //download the file
@@ -79,14 +75,14 @@ export class PapersService {
     return terms.pipe(
       debounceTime(100),
       distinctUntilChanged(),
-      switchMap(term => this.searchEntries(term))
+      switchMap((term) => this.searchEntries(term))
     );
   }
 
   filterRes(filterItems: object) {
     console.log(filterItems);
     return this.http.post(
-      'http://localhost:3000/api/papers/filter',
+      'http://localhost:4000/api/papers/filter',
       filterItems
     );
   }
@@ -94,11 +90,17 @@ export class PapersService {
   searchEntries(term) {
     console.log(term);
     let search = { search: term };
-    return this.http.post('http://localhost:3000/api/papers/search', search);
+    return this.http.post('http://localhost:4000/api/papers/search', search);
   }
 
-  deleteFile(id: string) : Observable<any> {
-    return this.http
-      .delete('http://localhost:3000/api/papers/' + id);
+  deleteFile(id: string): Observable<any> {
+    return this.http.delete('http://localhost:4000/api/papers/' + id);
+  }
+
+  approveOrRejectBook(data): Observable<any> {
+    return this.http.put(
+      'http://localhost:4000/api/papers/approve-reject',
+      data
+    );
   }
 }

@@ -1,6 +1,6 @@
 <div class="container-fluid my-5">
   <div class="row align-items-center full">
-    <!-- books -->
+    <!-- notes -->
     <div class="col border-left">
       <div class="row mt-3">
         <div class="col display-4 pt-3 pl-3">
@@ -122,7 +122,13 @@
       </ng-template>
       <div *ngIf="isDataLoaded" class="row pl-3 mt-4 notessec">
         <div *ngFor="let note of notes">
-          <div class="col pb-3 px-0 mx-2 cd">
+          <div
+            *ngIf="
+              note.isAdminApproved == 1 ||
+              (curUser.isAdmin && note.isAdminApproved == 0)
+            "
+            class="col pb-3 px-0 mx-2 cd"
+          >
             <a
               ><div class="card" style="width: 9rem">
                 <div class="card-body">
@@ -153,10 +159,34 @@
                       <i class="ml-auto far fa-trash-alt"></i>
                       &nbsp;Delete
                     </button>
+                    <div
+                      *ngIf="curUser.isAdmin && note.isAdminApproved == 0"
+                      class="row my-2"
+                    >
+                      <div class="col" style="text-align: center">
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          label="Allow"
+                          (click)="onApproveReject(note._id, 1)"
+                          icon="pi pi-check"
+                          class="p-button-success"
+                        ></button>
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          label="Reject"
+                          (click)="onApproveReject(note._id, 2)"
+                          icon="pi pi-times"
+                          class="p-button-danger"
+                        ></button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div></a
-            >
+                </div></div
+            ></a>
           </div>
         </div>
       </div>
@@ -268,7 +298,15 @@
           <div class="my-2 font w-100" *ngIf="fileName">
             File :
             <div
-              class="font-weight-lighter font-smaller w-100 mt-3 mr-3 px-3 py-2 filename"
+              class="
+                font-weight-lighter font-smaller
+                w-100
+                mt-3
+                mr-3
+                px-3
+                py-2
+                filename
+              "
             >
               <div class="row">
                 <div class="col-10">{{ fileName }}</div>
@@ -294,7 +332,7 @@
       </div>
       <div *ngIf="uploadingStatus" class="row">
         <div class="col d-flex justify-content-center">
-          <nz-spin nzSimple class="mt-3" nzTip="Uploading Book..."> </nz-spin>
+          <nz-spin nzSimple class="mt-3" nzTip="Uploading Notes..."> </nz-spin>
         </div>
       </div>
     </div>

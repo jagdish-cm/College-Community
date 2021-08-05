@@ -4,20 +4,22 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  ValidatorFn
+  ValidatorFn,
 } from '@angular/forms';
 import {
   NzNotificationService,
-  NzNotificationPlacement
+  NzNotificationPlacement,
 } from 'ng-zorro-antd/notification';
 import { NotesService } from '../../services/notes.service';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-notes',
   templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.scss']
+  styleUrls: ['./notes.component.scss'],
+  providers: [MessageService],
 })
 export class NotesComponent implements OnInit {
   placement: NzDrawerPlacement = 'bottom';
@@ -37,23 +39,24 @@ export class NotesComponent implements OnInit {
   popVisible: boolean = false;
   filterTerm$ = new Subject<object>();
   curUserDes: any;
-  isDataLoaded : boolean = false;
-  uploadingStatus : boolean = false;
+  isDataLoaded: boolean = false;
+  uploadingStatus: boolean = false;
   visible = false;
-  notFound : boolean = false ;
-  searching : boolean = false;
-  filtering : boolean = false;
+  notFound: boolean = false;
+  searching: boolean = false;
+  filtering: boolean = false;
 
   constructor(
     private fb: FormBuilder,
+    private messageService: MessageService,
     private notification: NzNotificationService,
     private notesService: NotesService,
-    private authService : AuthService
+    private authService: AuthService
   ) {
-    this.notesService.search(this.searchTerm$).subscribe(res => {
+    this.notesService.search(this.searchTerm$).subscribe((res) => {
       this.notes = res;
       console.log(this.notes.length);
-      if(this.notes.length === 0){
+      if (this.notes.length === 0) {
         this.notFound = true;
       }
       this.searching = false;
@@ -64,28 +67,28 @@ export class NotesComponent implements OnInit {
       'Electrical',
       'Agriculture',
       'Mechanical',
-      'Civil'
+      'Civil',
     ];
     this.sems = [1, 2, 3, 4, 5, 6, 7, 8];
-    this.branches.forEach(element => {
+    this.branches.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
       a['checked'] = false;
       this.checkOptionOne.push(a);
     });
-    this.sems.forEach(element => {
+    this.sems.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
       a['checked'] = false;
       this.checkOptionTwo.push(a);
     });
-    this.notesService.getNotes().subscribe((result) =>{
+    this.notesService.getNotes().subscribe((result) => {
       console.log('in notes observable');
       this.notes = result.notes;
       this.isDataLoaded = true;
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -95,26 +98,26 @@ export class NotesComponent implements OnInit {
       subject: ['', Validators.required],
       branch: ['', Validators.required],
       semester: ['', Validators.required],
-      file: [null, [Validators.required, this.fileExtValidator]]
+      file: [null, [Validators.required, this.fileExtValidator]],
     });
 
-    if(this.authService.isLogged() ){
+    if (this.authService.isLogged()) {
       this.curUser = this.authService.getCurUser();
       this.curUserDes = this.curUser.designation;
       this.notesForm.patchValue({ creator: this.curUser._id });
-        this.notesForm.get('creator').updateValueAndValidity();
+      this.notesForm.get('creator').updateValueAndValidity();
     }
 
-    this.authService.distributeCurUserInfo().subscribe((result) =>{
+    this.authService.distributeCurUserInfo().subscribe((result) => {
       console.log('disti logged in');
       this.curUser = result;
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
       this.notesForm.patchValue({ creator: this.curUser._id });
-        this.notesForm.get('creator').updateValueAndValidity();
-    })
+      this.notesForm.get('creator').updateValueAndValidity();
+    });
 
-    if(this.isDataLoaded){
+    if (this.isDataLoaded) {
       console.log(typeof this.notes[0].date);
       this.notes = this.notes.sort((a, b) => a.date - b.date);
       console.log(this.notes);
@@ -149,7 +152,7 @@ export class NotesComponent implements OnInit {
     }
   }
 
-  searchItem(search : string){
+  searchItem(search: string) {
     this.notFound = false;
     this.searching = true;
     this.searchTerm$.next(search);
@@ -189,9 +192,9 @@ export class NotesComponent implements OnInit {
         nzPlacement: position,
         nzStyle: {
           width: '600px',
-          color: 'red'
+          color: 'red',
         },
-        nzClass: 'test-class'
+        nzClass: 'test-class',
       }
     );
   }
@@ -218,19 +221,21 @@ export class NotesComponent implements OnInit {
       this.submitFileError = true;
     } else if (this.notesForm.status === 'VALID') {
       this.uploadingStatus = true;
-      this.notesService.addNotes(
-        this.notesForm.value.creator,
-        this.notesForm.value.topic,
-        this.notesForm.value.subject,
-        this.notesForm.value.branch,
-        this.notesForm.value.semester,
-        this.notesForm.value.file
-      ).subscribe((result) =>{
-        this.uploadingStatus = false;
-        this.close();
-        console.log(result);
-        this.notes.push(result);
-      });
+      this.notesService
+        .addNotes(
+          this.notesForm.value.creator,
+          this.notesForm.value.topic,
+          this.notesForm.value.subject,
+          this.notesForm.value.branch,
+          this.notesForm.value.semester,
+          this.notesForm.value.file
+        )
+        .subscribe((result) => {
+          this.uploadingStatus = false;
+          this.close();
+          console.log(result);
+          this.notes.push(result);
+        });
     }
   }
 
@@ -249,12 +254,12 @@ export class NotesComponent implements OnInit {
     this.filtering = true;
     let branchFilters = [];
     let semFilters = [];
-    this.checkOptionOne.forEach(element => {
+    this.checkOptionOne.forEach((element) => {
       if (element.checked == true) {
         branchFilters.push(element.value);
       }
     });
-    this.checkOptionTwo.forEach(element => {
+    this.checkOptionTwo.forEach((element) => {
       if (element.checked == true) {
         semFilters.push(element.value);
       }
@@ -267,10 +272,10 @@ export class NotesComponent implements OnInit {
       filterItems['branch'] = this.branches;
       filterItems['sem'] = this.sems;
     }
-    this.notesService.filterRes(filterItems).subscribe(res => {
+    this.notesService.filterRes(filterItems).subscribe((res) => {
       console.log(res);
       this.notes = res;
-      if(this.notes.length === 0){
+      if (this.notes.length === 0) {
         this.notFound = true;
       }
       this.filtering = false;
@@ -282,11 +287,39 @@ export class NotesComponent implements OnInit {
   }
 
   deleteFile(id: string) {
-    this.notesService.deleteFile(id).subscribe((result) =>{
+    this.notesService.deleteFile(id).subscribe((result) => {
       console.log(result);
-      this.notes = this.notes.filter((book) =>{
+      this.notes = this.notes.filter((book) => {
         return book._id !== id;
-      })
+      });
+    });
+  }
+
+  onApproveReject(id: string, status: number) {
+    const data = {
+      notesId: id,
+      status: status,
+    };
+    this.notesService.approveOrRejectBook(data).subscribe((res) => {
+      console.log(res);
+      console.log(status);
+      if (status == 1) {
+        console.log('display msg');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Approved',
+          life: 5000,
+          detail: 'Notes are now visible to other users!',
+        });
+      } else if (status == 2) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Declined',
+          detail: 'Notes will not be visible to other users!',
+        });
+      }
+      this.notes[this.notes.findIndex((x) => x._id === id)].isAdminApproved =
+        status;
     });
   }
 }

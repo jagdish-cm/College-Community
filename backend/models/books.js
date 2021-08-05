@@ -9,6 +9,13 @@ const booksSchema = new mongoose.Schema({
   author: { type: String, required: true },
   branch: { type: String, required: true },
   semester: { type: String, required: true },
+  isAdminApproved: {
+    type: Number,
+    default: 0
+    // 0 pending,
+    // 1 approved,
+    // 2 rejected
+  },
   fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
   date: String
 });
@@ -19,7 +26,7 @@ booksSchema.index(
 );
 
 booksSchema.statics = {
-  searchPartial: function(q, callback) {
+  searchPartial: function (q, callback) {
     return this.find(
       {
         $or: [{ title: new RegExp(q, "gi") }, { author: new RegExp(q, "gi") }]
@@ -28,7 +35,7 @@ booksSchema.statics = {
     );
   },
 
-  searchFull: function(q, callback) {
+  searchFull: function (q, callback) {
     return this.find(
       {
         $text: { $search: q, $caseSensitive: false }
@@ -37,7 +44,7 @@ booksSchema.statics = {
     );
   },
 
-  search: function(q, callback) {
+  search: function (q, callback) {
     this.searchFull(q, (err, data) => {
       if (err) return callback(err, data);
       if (!err && data.length) return callback(err, data);

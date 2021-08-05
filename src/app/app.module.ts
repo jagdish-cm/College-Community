@@ -116,6 +116,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { EditorModule } from 'primeng/editor';
 import { DropdownModule } from 'primeng/dropdown';
 import { CreateAsgnComponent } from './assigns/create-asgn/create-asgn.component';
+import { ToastModule } from 'primeng/toast';
 
 registerLocaleData(en);
 
@@ -202,6 +203,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
     NgbModule,
+    ToastModule,
     ReactiveFormsModule,
     NzFormModule,
     RouterModule.forRoot(routes),

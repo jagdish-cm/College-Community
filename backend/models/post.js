@@ -12,7 +12,17 @@ const postSchema = mongoose.Schema({
   time: String,
   lcounts: Number,
   postContent: String,
-  likedBy : Array,
+  isAdminApproved: {
+    type: Number,
+    default: 0
+    // 0 pending,
+    // 1 approved,
+    // 2 rejected
+  },
+  likedBy: {
+    type: [String],
+    default: undefined
+  },
   //   comments: Comment[],
   // comcounts: Number,
   imagePath: String

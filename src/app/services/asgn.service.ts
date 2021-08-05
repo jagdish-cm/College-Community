@@ -39,7 +39,7 @@ export class AsgnService {
       console.log(key + ' ' + value);
     });
     return this.http.post<{ assignment; aid: string }>(
-      'http://localhost:3000/api/asgn/create',
+      'http://localhost:4000/api/asgn/create',
       assignment
     );
   }
@@ -47,12 +47,12 @@ export class AsgnService {
   getAsgn(branch, semester) {
     console.log(branch + ' ------ ' + semester);
     return this.http.get<any>(
-      `http://localhost:3000/api/asgn/getStudentAsgn?branch=${branch}&semester=${semester}`
+      `http://localhost:4000/api/asgn/getStudentAsgn?branch=${branch}&semester=${semester}`
     );
   }
 
   getFacAsgns() {
-    return this.http.get<any>('http://localhost:3000/api/asgn/facAsgns');
+    return this.http.get<any>('http://localhost:4000/api/asgn/facAsgns');
   }
 
   submitAsgn(asgnId: string, studentId: string, files: File[], text: string) {
@@ -68,14 +68,14 @@ export class AsgnService {
       assignment.append('files[]', null);
     }
     return this.http.post<any>(
-      'http://localhost:3000/api/asgn/submitByStudent',
+      'http://localhost:4000/api/asgn/submitByStudent',
       assignment
     );
   }
 
   getStudentNames(id) {
     return this.http.get<any>(
-      'http://localhost:3000/api/asgn/studentNames/' + id
+      'http://localhost:4000/api/asgn/studentNames/' + id
     );
   }
 }

@@ -4,21 +4,23 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  ValidatorFn
+  ValidatorFn,
 } from '@angular/forms';
 import {
   NzNotificationService,
-  NzNotificationPlacement
+  NzNotificationPlacement,
 } from 'ng-zorro-antd/notification';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BooksService } from '../../services/books-service.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss']
+  styleUrls: ['./books.component.scss'],
+  providers: [MessageService],
 })
 export class BooksComponent implements OnInit {
   placement: NzDrawerPlacement = 'bottom';
@@ -38,23 +40,24 @@ export class BooksComponent implements OnInit {
   popVisible: boolean = false;
   filterTerm$ = new Subject<object>();
   curUserDes: any;
-  isDataLoaded : boolean = false;
-  uploadingStatus : boolean = false;
+  isDataLoaded: boolean = false;
+  uploadingStatus: boolean = false;
   visible = false;
-  notFound : boolean = false ;
-  searching : boolean = false;
-  filtering : boolean = false;
+  notFound: boolean = false;
+  searching: boolean = false;
+  filtering: boolean = false;
 
   constructor(
     private fb: FormBuilder,
+    private messageService: MessageService,
     private notification: NzNotificationService,
-    private authService : AuthService,
+    private authService: AuthService,
     private booksService: BooksService
   ) {
-    this.booksService.search(this.searchTerm$).subscribe(res => {
+    this.booksService.search(this.searchTerm$).subscribe((res) => {
       this.books = res;
       console.log(this.books.length);
-      if(this.books.length === 0){
+      if (this.books.length === 0) {
         this.notFound = true;
       }
       this.searching = false;
@@ -65,17 +68,17 @@ export class BooksComponent implements OnInit {
       'Electrical',
       'Agriculture',
       'Mechanical',
-      'Civil'
+      'Civil',
     ];
     this.sems = [1, 2, 3, 4, 5, 6, 7, 8];
-    this.branches.forEach(element => {
+    this.branches.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
       a['checked'] = false;
       this.checkOptionOne.push(a);
     });
-    this.sems.forEach(element => {
+    this.sems.forEach((element) => {
       let a = {};
       a['label'] = element;
       a['value'] = element;
@@ -83,12 +86,12 @@ export class BooksComponent implements OnInit {
       this.checkOptionTwo.push(a);
     });
     console.log('observ start');
-    this.booksService.getBooks().subscribe((result) =>{
+    this.booksService.getBooks().subscribe((result) => {
       console.log(result.books);
       this.books = result.books;
       this.books = this.books.sort((a, b) => a.date - b.date);
       this.isDataLoaded = true;
-    })
+    });
     console.log('observe end');
   }
 
@@ -99,27 +102,27 @@ export class BooksComponent implements OnInit {
       author: ['', Validators.required],
       branch: ['', Validators.required],
       semester: ['', Validators.required],
-      file: [null, [Validators.required, this.fileExtValidator]]
+      file: [null, [Validators.required, this.fileExtValidator]],
     });
-    
-    if(this.authService.isLogged() ){
-      console.log('yes logged in')
+
+    if (this.authService.isLogged()) {
+      console.log('yes logged in');
       this.curUser = this.authService.getCurUser();
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
       console.log('designation ' + this.curUserDes);
     }
-    
-    this.authService.distributeCurUserInfo().subscribe((result) =>{
+
+    this.authService.distributeCurUserInfo().subscribe((result) => {
       console.log('disti logged in');
       this.curUser = result;
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
       this.booksForm.patchValue({ creator: this.curUser._id });
-        this.booksForm.get('creator').updateValueAndValidity();
-    })
+      this.booksForm.get('creator').updateValueAndValidity();
+    });
 
-    if(this.isDataLoaded){
+    if (this.isDataLoaded) {
       console.log(typeof this.books[0].date);
       this.books = this.books.sort((a, b) => a.date - b.date);
       console.log(this.books);
@@ -130,7 +133,7 @@ export class BooksComponent implements OnInit {
   printCh(a: string) {
     console.log(a);
   }
-  
+
   onFilePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     this.booksForm.patchValue({ file: file });
@@ -154,7 +157,7 @@ export class BooksComponent implements OnInit {
     }
   }
 
-  searchItem(search : string){
+  searchItem(search: string) {
     this.notFound = false;
     this.searching = true;
     this.searchTerm$.next(search);
@@ -194,9 +197,9 @@ export class BooksComponent implements OnInit {
         nzPlacement: position,
         nzStyle: {
           width: '600px',
-          color: 'red'
+          color: 'red',
         },
-        nzClass: 'test-class'
+        nzClass: 'test-class',
       }
     );
   }
@@ -228,19 +231,21 @@ export class BooksComponent implements OnInit {
       this.submitFileError = true;
     } else if (this.booksForm.status === 'VALID') {
       this.uploadingStatus = true;
-      this.booksService.addBook(
-        this.booksForm.value.creator,
-        this.booksForm.value.title,
-        this.booksForm.value.author,
-        this.booksForm.value.branch,
-        this.booksForm.value.semester,
-        this.booksForm.value.file
-      ).subscribe((result) =>{
-        this.uploadingStatus = false;
-        this.close();
-        console.log(result);
-        this.books.push(result);
-      });
+      this.booksService
+        .addBook(
+          this.booksForm.value.creator,
+          this.booksForm.value.title,
+          this.booksForm.value.author,
+          this.booksForm.value.branch,
+          this.booksForm.value.semester,
+          this.booksForm.value.file
+        )
+        .subscribe((result) => {
+          this.uploadingStatus = false;
+          this.close();
+          console.log(result);
+          this.books.push(result);
+        });
     }
   }
 
@@ -255,12 +260,12 @@ export class BooksComponent implements OnInit {
     this.filtering = true;
     let branchFilters = [];
     let semFilters = [];
-    this.checkOptionOne.forEach(element => {
+    this.checkOptionOne.forEach((element) => {
       if (element.checked == true) {
         branchFilters.push(element.value);
       }
     });
-    this.checkOptionTwo.forEach(element => {
+    this.checkOptionTwo.forEach((element) => {
       if (element.checked == true) {
         semFilters.push(element.value);
       }
@@ -273,10 +278,10 @@ export class BooksComponent implements OnInit {
       filterItems['branch'] = this.branches;
       filterItems['sem'] = this.sems;
     }
-    this.booksService.filterRes(filterItems).subscribe(res => {
+    this.booksService.filterRes(filterItems).subscribe((res) => {
       console.log(res);
       this.books = res;
-      if(this.books.length === 0){
+      if (this.books.length === 0) {
         this.notFound = true;
       }
       this.filtering = false;
@@ -284,11 +289,39 @@ export class BooksComponent implements OnInit {
   }
 
   deleteFile(id: string) {
-    this.booksService.deleteFile(id).subscribe((result) =>{
+    this.booksService.deleteFile(id).subscribe((result) => {
       console.log(result);
-      this.books = this.books.filter((book) =>{
+      this.books = this.books.filter((book) => {
         return book._id !== id;
-      })
+      });
+    });
+  }
+
+  onApproveReject(id: string, status: number) {
+    const data = {
+      bookId: id,
+      status: status,
+    };
+    this.booksService.approveOrRejectBook(data).subscribe((res) => {
+      console.log(res);
+      console.log(status);
+      if (status == 1) {
+        console.log('display msg');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Approved',
+          life: 5000,
+          detail: 'Book is now visible to other users!',
+        });
+      } else if (status == 2) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Declined',
+          detail: 'Book will not be visible to other users!',
+        });
+      }
+      this.books[this.books.findIndex((x) => x._id === id)].isAdminApproved =
+        status;
     });
   }
 }

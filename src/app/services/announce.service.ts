@@ -35,12 +35,12 @@ export class AnnounceService {
     }
     return this.http
       .post<{ announce; aid: string }>(
-        'http://localhost:3000/api/announce/create',
+        'http://localhost:4000/api/announce/create',
         announcement
       )
   }
 
   getAnnounces(): Observable<any> {
-    return this.http.get<[]>('http://localhost:3000/api/announce');
+    return this.http.get<[]>('http://localhost:4000/api/announce');
   }
 }
