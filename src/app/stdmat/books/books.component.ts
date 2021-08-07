@@ -110,6 +110,7 @@ export class BooksComponent implements OnInit {
       this.curUser = this.authService.getCurUser();
       console.log(this.curUser);
       this.curUserDes = this.curUser.designation;
+      this.booksForm.patchValue({ creator: this.curUser._id });
       console.log('designation ' + this.curUserDes);
     }
 

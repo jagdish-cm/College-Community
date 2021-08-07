@@ -6,12 +6,13 @@ import { PostService } from '../../../services/post.service';
 import { AuthService } from '../../../services/auth.service';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { FileCheck } from 'angular-file-validator'; // <-------
-
+import { MessageService } from 'primeng/api';
 import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
+  providers: [MessageService],
 })
 export class CreatePostComponent implements OnInit {
   createdPost: FormGroup;
@@ -29,9 +30,9 @@ export class CreatePostComponent implements OnInit {
     private postService: PostService,
     private msg: NzMessageService,
     private fb: FormBuilder,
-    private authService: AuthService
-  ) // private route: ActivatedRoute
-  {}
+    private messageService: MessageService,
+    private authService: AuthService // private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.createdPost = this.fb.group({
@@ -71,15 +72,26 @@ export class CreatePostComponent implements OnInit {
       console.log('invalid post');
       return;
     }
-    this.postService.addPost(
-      null,
-      this.curUser._id,
-      this.postTime,
-      this.createdPost.value.postContent,
-      0,
-      0,
-      this.createdPost.value.image
-    );
+    this.postService
+      .addPost(
+        null,
+        this.curUser._id,
+        this.postTime,
+        this.createdPost.value.postContent,
+        0,
+        0,
+        this.createdPost.value.image
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Waiting for Approval',
+          life: 5000,
+          detail: 'Please wait untill your post has been approved by Admin!',
+        });
+      });
+    document.getElementById('closeBtn').click();
     this.createdPost.reset();
   }
 

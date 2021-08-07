@@ -30,7 +30,7 @@ export class PostService {
     lcounts: number,
     comcounts: number,
     image: File
-  ) {
+  ): Observable<any> {
     const newpost = new FormData();
     console.log('at 1');
     newpost.append('creator', creator);
@@ -47,15 +47,10 @@ export class PostService {
       newpost.append('image', null);
     }
     console.log('at 3');
-    this.http
-      .post<{ post; postid: string }>(
-        'http://localhost:4000/api/posts',
-        newpost
-      )
-      .subscribe((resdata) => {
-        console.log('post created');
-        this.reloadComponent();
-      });
+    return this.http.post<{ post; postid: string }>(
+      'http://localhost:4000/api/posts',
+      newpost
+    );
   }
 
   approveOrRejectPost(data): Observable<any> {

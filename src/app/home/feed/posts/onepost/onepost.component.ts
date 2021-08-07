@@ -37,7 +37,7 @@ export class OnepostComponent implements OnInit {
   postTime;
   visible: boolean = false;
   userLiked: boolean = false;
-  hidePost : boolean = false;
+  hidePost: boolean = false;
 
   constructor(
     private postService: PostService,
@@ -148,6 +148,7 @@ export class OnepostComponent implements OnInit {
           life: 5000,
           detail: 'Post is now visible to other users!',
         });
+        this.post.isAdminApproved = status;
       } else if (status == 2) {
         this.hidePost = true;
         this.messageService.add({
@@ -191,5 +192,11 @@ export class OnepostComponent implements OnInit {
 
   likePost() {
     this.postService.likePost(this.post._id, this.curUser._id);
+    this.userLiked = !this.userLiked;
+    if (this.userLiked) {
+      this.post.lcounts++;
+    } else {
+      this.post.lcounts--;
+    }
   }
 }

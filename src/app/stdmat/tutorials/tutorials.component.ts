@@ -107,6 +107,7 @@ export class TutorialsComponent implements OnInit {
       console.log('yes logged in');
       this.curUser = this.authService.getCurUser();
       console.log(this.curUser);
+      this.tutorialsForm.patchValue({ creator: this.curUser._id });
       this.curUserDes = this.curUser.designation;
       console.log('designation ' + this.curUserDes);
     }

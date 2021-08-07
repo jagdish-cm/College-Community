@@ -171,7 +171,7 @@ router.put("/like", async (req, res, next) => {
         }
       )
       console.log('post unliked')
-      return res.status(400).json({ message: 'Post unliked' });
+      return res.status(200).json({ message: 'Post unliked' });
     }
   } catch (error) {
     console.log(error)

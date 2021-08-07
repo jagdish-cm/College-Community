@@ -14,7 +14,7 @@
         nzSimple
         [nzSize]="'large'"
       ></nz-spin>
-      <div *ngIf="isDataLoaded" class="row">
+      <div class="row">
         <div class="col ml-1 mt-1">
           <div class="form-group div-inline mb-0 has-search px-1 w-sm-50">
             <span class="fa fa-search form-control-feedback"></span>
@@ -195,7 +195,6 @@
 </div>
 
 <nz-drawer
-  *ngIf="isDataLoaded"
   [nzPlacement]="placement"
   [nzBodyStyle]="{ overflow: 'auto' }"
   [nzMaskClosable]="false"
